@@ -5,5 +5,9 @@
 	"editor.formatOnSave": true,
 	"[vue]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	// TailwindCSS　常にクラス名候補表示
+	"editor.quickSuggestions": {
+		"strings": true
 	}
 }

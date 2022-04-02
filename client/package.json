@@ -9,6 +9,7 @@
     "lint-fix": "eslint --ext .ts,vue --ignore-path .gitignore . && prettier --write src/**/*.{ts,vue}"
   },
   "dependencies": {
+    "@heroicons/vue": "^1.0.6",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
