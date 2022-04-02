@@ -1,0 +1,13 @@
+version: "3"
+services:
+    client:
+        build:
+            context: .
+            dockerfile: docker/client/Dockerfile
+        container_name: matching_client
+        working_dir: /var/www
+        ports:
+            - "8080:8080"
+        tty: true   # コンテナを起動し続ける
+        volumes:
+            - ./client:/var/www
