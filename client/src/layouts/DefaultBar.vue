@@ -3,9 +3,12 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { MenuIcon, MoonIcon, SunIcon } from "@heroicons/vue/outline";
 // import { debounce } from 'lodash';
 
+// モードtype
+type Mode = "dark" | "light";
+
 const innerWidth = ref(window.innerWidth); // 画面横幅取得
 const show = ref(innerWidth.value >= 1280 ? true : false); // サイドバー表示するか
-const theme = ref("light");
+const theme = ref<Mode>("light");
 
 const checkWindowSize = () => {
   if (window.innerWidth >= 1280) {
@@ -14,6 +17,22 @@ const checkWindowSize = () => {
     if (show.value === true) show.value = false;
   }
   innerWidth.value = window.innerWidth;
+};
+
+if (localStorage.theme === "dark") {
+  document.documentElement.classList.add("dark");
+  theme.value = "dark";
+} else {
+  document.documentElement.classList.remove("dark");
+  theme.value = "light";
+}
+
+const changeMode = (mode: Mode) => {
+  theme.value = mode;
+  theme.value === "light"
+    ? document.documentElement.classList.remove("dark")
+    : document.documentElement.classList.add("dark");
+  localStorage.theme = mode;
 };
 
 onMounted(() => {
@@ -35,9 +54,9 @@ onUnmounted(() => {
     </div>
     <!-- 画面幅が狭い場合 -->
     <div
+      v-show="show"
       class="fixed xl:hidden inset-0 bg-gray-900 opacity-50 z-10"
       @click="show = !show"
-      v-show="show"
     ></div>
     <div
       class="bg-gray-100 dark:bg-gray-900 h-screen overflow-hidden duration-300"
@@ -51,10 +70,15 @@ onUnmounted(() => {
           @click="show = !show"
         />
         <MoonIcon
-          class="w-7 h-7 text-gray-600 cursor-pointer"
           v-if="theme === 'light'"
+          class="w-7 h-7 text-gray-600 cursor-pointer"
+          @click="changeMode('dark')"
         />
-        <SunIcon class="w-7 h-7 text-gray-300 cursor-pointer" v-else />
+        <SunIcon
+          v-else
+          class="w-7 h-7 text-gray-300 cursor-pointer"
+          @click="changeMode('light')"
+        />
       </div>
       <div class="dark:text-gray-300">
         <slot />
