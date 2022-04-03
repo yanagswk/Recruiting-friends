@@ -17,17 +17,8 @@ module.exports = {
   rules: {
     // console.logを許可
     "no-console": "off",
-    // 'vue/max-attributes-per-line': 'off',
-    // 'vue/singleline-html-element-content-newline': 'off',
-    // 'vue/html-self-closing': [
-    //   'error',
-    //   {
-    //     html: {
-    //       void: 'always',
-    //     },
-    //   },
-    // ],
-    // 'prettier/prettier': ['error', {}],
+    // コンポーネントの複数ワードルール解除
+    "vue/multi-word-component-names": "off",
     // ネーミングルールを追加
     "@typescript-eslint/naming-convention": [
       "error",

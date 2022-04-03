@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, computed } from "vue";
+import { useRoute } from "vue-router";
 import {
   TemplateIcon,
   ShoppingCartIcon,
@@ -20,11 +21,11 @@ const lists = reactive([
     sublists: [
       {
         name: "商品一覧",
-        link: "/#",
+        link: "/product",
       },
       {
         name: "注文一覧",
-        link: "/#",
+        link: "/order",
       },
       {
         name: "カテゴリー一覧",
@@ -69,19 +70,27 @@ const leave = (element: HTMLElement) => {
     element.style.height = "0";
   });
 };
+
+/**
+ * パス情報取得
+ */
+const currentRoute = computed(() => {
+  return useRoute().fullPath;
+});
 </script>
 
 <template>
   <ul class="text-gray-700 dark:text-gray-300">
     <li v-for="list in lists" :key="list.name" class="mb-1">
-      <a
+      <router-link
         v-if="!list.sublists"
-        :href="list.link"
+        :to="list.link"
         class="flex items-center p-2 rounded-sm hover:text-white hover:bg-blue-400"
+        :class="{ 'bg-blue-600 text-white': currentRoute === list.link }"
       >
         <component :is="icons[list.icon]" class="w-6 h-6 mr-2"></component>
         <span>{{ list.name }}</span>
-      </a>
+      </router-link>
       <div
         v-else
         class="flex items-center justify-between p-2 cursor-pointer rounded-sm hover:bg-blue-400 hover:text-white"
@@ -99,12 +108,15 @@ const leave = (element: HTMLElement) => {
       <transition @enter="enter" @leave="leave">
         <ul v-show="list.show" class="mt-1 overflow-hidden">
           <li v-for="sublist in list.sublists" :key="sublist.name" class="mb-1">
-            <a
+            <router-link
+              :to="sublist.link"
               class="block p-2 rounded-sm hover:bg-blue-400 hover:text-white"
-              :href="sublist.link"
+              :class="{
+                'bg-blue-600 text-white': currentRoute === sublist.link,
+              }"
             >
               <span class="pl-8">{{ sublist.name }}</span>
-            </a>
+            </router-link>
           </li>
         </ul>
       </transition>

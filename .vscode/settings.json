@@ -15,5 +15,7 @@
 	// 常にクラス名候補表示
 	"editor.quickSuggestions": {
 		"strings": true
-	}
+	},
+	"bladeFormatter.format.indentSize": 4,
+	"editor.tabSize": 2
 }

@@ -26,7 +26,7 @@ onUnmounted(() => document.removeEventListener("click", clickOutside));
 
 <template>
   <!-- ref: 要素に対して直接アクセスできる -->
-  <div class="relative" ref="root">
+  <div ref="root" class="relative">
     <img
       src="@/assets/sakura-ayane.jpeg"
       class="rounded-full w-10 h-10 cursor-pointer"
@@ -46,13 +46,13 @@ onUnmounted(() => document.removeEventListener("click", clickOutside));
           <li
             class="text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-600 p-2"
           >
-            <a href="/#" class="flex items-center space-x-2">
+            <router-link to="/profile" class="flex items-center space-x-2">
               <UserIcon class="w-5 h-5" />
-              <span class="text-sm font-bold">プロファイル</span></a
-            >
+              <span class="text-sm font-bold">プロファイル</span>
+            </router-link>
           </li>
           <li
-            class="ttext-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-600 p-2"
+            class="text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-600 p-2"
           >
             <a href="/#" class="flex items-center space-x-2">
               <LogoutIcon class="w-5 h-5" />
