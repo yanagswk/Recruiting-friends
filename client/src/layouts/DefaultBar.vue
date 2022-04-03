@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import { MenuIcon, MoonIcon, SunIcon } from "@heroicons/vue/outline";
+import DropdownMenu from "@/components/DropdownMenu.vue";
 // import { debounce } from 'lodash';
 
 // モードtype
@@ -69,16 +70,19 @@ onUnmounted(() => {
           class="h-6 w-6 text-gray-600 dark:text-gray-300 cursor-pointer"
           @click="show = !show"
         />
-        <MoonIcon
-          v-if="theme === 'light'"
-          class="w-7 h-7 text-gray-600 cursor-pointer"
-          @click="changeMode('dark')"
-        />
-        <SunIcon
-          v-else
-          class="w-7 h-7 text-gray-300 cursor-pointer"
-          @click="changeMode('light')"
-        />
+        <div class="flex items-center space-x-4">
+          <MoonIcon
+            v-if="theme === 'light'"
+            class="w-7 h-7 text-gray-600 cursor-pointer"
+            @click="changeMode('dark')"
+          />
+          <SunIcon
+            v-else
+            class="w-7 h-7 text-gray-300 cursor-pointer"
+            @click="changeMode('light')"
+          />
+          <DropdownMenu />
+        </div>
       </div>
       <div class="dark:text-gray-300">
         <slot />
