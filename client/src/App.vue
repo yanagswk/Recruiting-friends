@@ -3,7 +3,5 @@ import DefaultBar from "./layouts/DefaultBar.vue";
 </script>
 
 <template>
-  <div>
-    <DefaultBar>ダッシュボード</DefaultBar>
-  </div>
+  <DefaultBar>ダッシュボード</DefaultBar>
 </template>

@@ -6,7 +6,13 @@
 	"[vue]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
-	// TailwindCSS　常にクラス名候補表示
+
+	// TailwindCSS
+	"tailwindCSS.includeLanguages": {
+		"plaintext": "vue"
+	},
+	"tailwindCSS.emmetCompletions": true,
+	// 常にクラス名候補表示
 	"editor.quickSuggestions": {
 		"strings": true
 	}
