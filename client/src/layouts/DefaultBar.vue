@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { MenuIcon, MoonIcon, SunIcon } from "@heroicons/vue/outline";
 import DropdownMenu from "@/components/DropdownMenu.vue";
+import SideBar from "@/components/SideBar.vue";
 // import { debounce } from 'lodash';
 
 // モードtype
@@ -51,7 +52,7 @@ onUnmounted(() => {
       class="fixed top-0 w-64 h-screen bg-white dark:bg-gray-800 z-20 transform duration-300 dark:text-gray-300"
       :class="{ '-translate-x-full': !show }"
     >
-      サイドバー
+      <SideBar />
     </div>
     <!-- 画面幅が狭い場合 -->
     <div
@@ -85,6 +86,7 @@ onUnmounted(() => {
         </div>
       </div>
       <div class="dark:text-gray-300">
+        <!-- サイドバー -->
         <slot />
       </div>
     </div>
