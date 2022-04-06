@@ -1,12 +1,8 @@
-<!-- <script setup lang="ts">
-import DefaultBar from "./layouts/DefaultBar.vue";
-</script>
-
-<template>
-  <DefaultBar>ダッシュボード</DefaultBar>
-</template> -->
 <script setup lang="ts">
+import { ref } from "vue";
 import DefaultBar from "./layouts/DefaultBar.vue";
+
+const test = "aaa";
 </script>
 
 <template>
