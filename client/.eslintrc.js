@@ -22,14 +22,14 @@ module.exports = {
     // ネーミングルールを追加
     "@typescript-eslint/naming-convention": [
       "error",
-      {
-        selector: "default",
-        format: ["camelCase"],
-      },
-      {
-        selector: ["property"],
-        format: ["camelCase", "PascalCase", "chain-case"],
-      },
+      // {
+      //   selector: "default",
+      //   format: ["camelCase"],
+      // },
+      // {
+      //   selector: ["property"],
+      //   format: ["camelCase", "PascalCase", "chain-case"],
+      // },
       {
         selector: ["class", "enum", "interface", "typeAlias", "typeParameter"],
         format: ["PascalCase"],
