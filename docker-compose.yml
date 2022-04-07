@@ -1,50 +1,50 @@
 version: "3"
 services:
-    client:
-        build:
-            context: .
-            dockerfile: docker/client/Dockerfile
-        container_name: matching_client
-        working_dir: /var/www
-        ports:
-            - "8080:8080"
-        tty: true
-        volumes:
-            - ./client:/var/www
-#     matching_api:
-#         build:
-#             context: .
-#             dockerfile: ./docker/api/Dockerfile
-#         container_name: matching_api
-#         working_dir: /var/www
-#         tty: true
-#         volumes:
-#             - ./api/:/var/www
-#     nginx:
-#         build:
-#             context: .
-#             dockerfile: ./docker/nginx/Dockerfile
-#         ports:
-#             - 80:80
-#             - 3000:3000
-#         depends_on: # コンテナ間の依存関係(先に起動するコンテナのサービス名) PHP->Nginxの順でコンテナを起動
-#             - matching_api
-#         volumes:
-#             - ./api/:/var/www
-#     db:
-#         build:
-#             context: .
-#             dockerfile: ./docker/mysql/Dockerfile
-#         platform: linux/x86_64 # M1 mac用
-#         ports:
-#             - 3306:3306
-#         environment:
-#             MYSQL_DATABASE: matching_db
-#             MYSQL_USER: matching
-#             MYSQL_PASSWORD: matching_pass
-#             MYSQL_ROOT_PASSWORD: root
-#             TZ: "Asia/Tokyo"
-#         volumes:
-#             - matching:/var/lib/mysql
-# volumes:
-#     matching:
+  client:
+    build:
+      context: .
+      dockerfile: docker/client/Dockerfile
+    container_name: matching_client
+    working_dir: /var/www
+    ports:
+      - "8080:8080"
+    tty: true
+    volumes:
+      - ./client:/var/www
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/api/Dockerfile
+    container_name: matching_api
+    working_dir: /var/www
+    tty: true
+    volumes:
+      - ./api:/var/www
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - 80:80
+      - 3000:3000
+    depends_on: # コンテナ間の依存関係(先に起動するコンテナのサービス名) PHP->Nginxの順でコンテナを起動
+      - api
+    volumes:
+      - ./api:/var/www
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/mysql/Dockerfile
+    platform: linux/x86_64 # M1 mac用
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: matching_db
+      MYSQL_USER: matching
+      MYSQL_PASSWORD: matching_pass
+      MYSQL_ROOT_PASSWORD: root
+      TZ: "Asia/Tokyo"
+    volumes:
+      - matching:/var/lib/mysql
+volumes:
+  matching:
