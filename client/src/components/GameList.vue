@@ -38,7 +38,12 @@ onMounted(() => {
       </div>
       <div>
         <div class="text-indigo-500 md:text-lg font-bold text-center">
-          {{ game.game_name }}
+          <router-link to="/profile">
+            <!-- <router-link :to="{ name: 'Recruitment' }"> -->
+            <!-- <a href="/recruitment"> -->
+            {{ game.game_name }}
+            <!-- </a> -->
+          </router-link>
         </div>
         <p class="text-gray-500 text-sm md:text-base text-center mb-3 md:mb-4">
           {{ game.hardware_name }}
