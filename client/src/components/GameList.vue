@@ -38,7 +38,7 @@ onMounted(() => {
       </div>
       <div>
         <div class="text-indigo-500 md:text-lg font-bold text-center">
-          <router-link to="/profile">
+          <router-link to="/recruitment">
             <!-- <router-link :to="{ name: 'Recruitment' }"> -->
             <!-- <a href="/recruitment"> -->
             {{ game.game_name }}
