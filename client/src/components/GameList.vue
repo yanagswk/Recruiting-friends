@@ -38,11 +38,8 @@ onMounted(() => {
       </div>
       <div>
         <div class="text-indigo-500 md:text-lg font-bold text-center">
-          <router-link to="/recruitment">
-            <!-- <router-link :to="{ name: 'Recruitment' }"> -->
-            <!-- <a href="/recruitment"> -->
+          <router-link :to="{ name: 'Recruitment', params: { id: game.id } }">
             {{ game.game_name }}
-            <!-- </a> -->
           </router-link>
         </div>
         <p class="text-gray-500 text-sm md:text-base text-center mb-3 md:mb-4">
