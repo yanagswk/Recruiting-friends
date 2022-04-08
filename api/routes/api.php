@@ -19,5 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route::get('game_list', 'Api\OfferController@postOffer');
 Route::get('/game_list', [GameController::class, 'getGameList']);
+Route::get('/game', [GameController::class, 'getGame']);
