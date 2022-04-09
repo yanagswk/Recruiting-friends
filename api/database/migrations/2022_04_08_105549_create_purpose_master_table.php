@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('game_list', function (Blueprint $table) {
-            $table->id();
-            $table->string('game_name');
-            $table->string('game_image_url')->nullable();
-            $table->integer('hardware_id');
-            $table->boolean('is_invalid')->default(0);
-            $table->timestamps();
+        Schema::create('purpose_master', function (Blueprint $table) {
+            $table->id('purpose_id');
+            $table->string('purpose_name');
         });
     }
 
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('game_list');
+        Schema::dropIfExists('purpose_master');
     }
 };

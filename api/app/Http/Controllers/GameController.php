@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Library\Common;
 use App\Models\GameList;
 use App\Models\HardwareMaster;
+use App\Models\PurposeMaster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -57,15 +58,36 @@ class GameController extends Controller
         if (empty($game)) {
             return Common::makeNotFoundResponse();
         }
-
         // 階層を上げる
         if (!empty($game['hardware'])) {
             $game = array_merge($game, $game['hardware']);
             unset($game['hardware']);
         }
 
+        $hardwares = [];
+        if ($game['hardware_id'] === HardwareMaster::PS4PS5) {
+            $hardwares[] = [
+                'hardware_id' => HardwareMaster::PS4,
+                'hardware_name' => 'PS4'
+            ];
+            $hardwares[] = [
+                'hardware_id' => HardwareMaster::PS5,
+                'hardware_name' => 'PS5'
+            ];
+        } else {
+            $hardwares[] = [
+                'hardware_id' => $game['hardware_id'],
+                'hardware_name' => $game['hardware_name']
+            ];
+        }
+
+        // 目的一覧取得
+        $purpose_list = PurposeMaster::all()->toArray();
+
         return Common::makeResponse([
-            'game' => $game
+            'game'      => $game,
+            'hardwares'  => $hardwares,
+            'purpose_list' => $purpose_list ?? []
         ]);
     }
 }
