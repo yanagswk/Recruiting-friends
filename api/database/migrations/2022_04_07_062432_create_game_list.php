@@ -13,11 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('game_list', function (Blueprint $table) {
+        Schema::create('game', function (Blueprint $table) {
             $table->id();
             $table->string('game_name');
             $table->string('game_image_url')->nullable();
             $table->integer('hardware_id');
+            $table->boolean('is_ps')->default(0);
+            $table->boolean('is_steam')->default(0);
+            $table->boolean('is_origin')->default(0);
+            $table->boolean('is_skype')->default(0);
+            $table->boolean('is_discord')->default(0);
+            $table->boolean('is_friend_code')->default(0);
+            $table->boolean('is_invalid')->default(0);
             $table->timestamps();
         });
     }

@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import { getGameList } from "@/api/game";
 import { GameList } from "@/types/game";
 
-const gameList = ref<GameList[]>();
+const gameList = ref<GameList[]>([]);
 
 /**
  * ゲーム一覧取得api
