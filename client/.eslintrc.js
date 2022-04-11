@@ -31,13 +31,13 @@ module.exports = {
       //   format: ["camelCase", "PascalCase", "chain-case"],
       // },
       {
-        selector: ["class", "enum", "interface", "typeAlias", "typeParameter"],
-        format: ["PascalCase"],
+        // selector: ["class", "enum", "interface", "typeAlias", "typeParameter"],
+        // format: ["PascalCase"],
       },
       {
-        selector: "variable",
-        modifiers: ["const"],
-        format: ["camelCase", "UPPER_CASE"],
+        // selector: "variable",
+        // modifiers: ["const"],
+        // format: ["camelCase", "UPPER_CASE"],
       },
     ],
   },

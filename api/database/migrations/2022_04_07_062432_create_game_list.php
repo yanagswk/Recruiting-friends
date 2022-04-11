@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('game_list');
+        Schema::dropIfExists('game');
     }
 };

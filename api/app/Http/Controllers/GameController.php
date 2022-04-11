@@ -6,7 +6,10 @@ use App\Library\Common;
 use App\Models\Game;
 use App\Models\HardwareMaster;
 use App\Models\PurposeMaster;
+use App\Models\Recruitments;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class GameController extends Controller
@@ -82,12 +85,95 @@ class GameController extends Controller
         }
 
         // 目的一覧取得
-        $purpose_list = PurposeMaster::all()->toArray();
+        // $purpose_list = PurposeMaster::all()->toArray();
+
+        // フレンド募集一覧取得
+        $recruitment_master = Recruitments::where('game_id', $request->game_id)
+            ->orderBy('created_at', 'desc')
+            ->active()
+            ->get()
+            ->toArray();
+        \Log::debug($recruitment_master);
+
+        $recruitment_list = [];
+        if (!empty($recruitment_master)) {
+            foreach ($recruitment_master as $index => $recruitment)
+                $recruitment_list[] = [
+                    'id'    => $recruitment['id'],
+                    'game_id'    => $recruitment['game_id'],
+                    'hardware_id'    => $recruitment['hardware_id'],
+                    'comment'    => $recruitment['comment'],
+                    'ps_id'    => $recruitment['ps_id'],
+                    'steam_id'    => $recruitment['steam_id'],
+                    'origin_id'    => $recruitment['origin_id'],
+                    'skype_id'    => $recruitment['skype_id'],
+                    'discord_id'    => $recruitment['discord_id'],
+                    'friend_code_id'    => $recruitment['friend_code_id'],
+                    'created_at'    => $this->formatDate($recruitment['created_at']),
+                ];
+        }
 
         return Common::makeResponse([
             'game'      => $game,
             'hardwares'  => $hardwares,
-            'purpose_list' => $purpose_list ?? []
+            'recruitment_list' => $recruitment_list
         ]);
+    }
+
+    /**
+     * フレンド募集
+     */
+    public function recruitment(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'game_id'           => 'required|integer',
+            'hardware_id'       => 'required|integer',
+            'comment'           => 'required|string',
+            'ps_id'             => 'nullable|string',
+            'steam_id'          => 'nullable|string',
+            'origin_id'         => 'nullable|string',
+            'skype_id'          => 'nullable|string',
+            'discord_id'        => 'nullable|string',
+            'friend_code_id'    => 'nullable|string',
+        ]);
+        \Log::debug($request->all());
+        if ($validation->fails()) {
+            return Common::makeValidationErrorResponse($validation->errors());
+        }
+
+        try {
+            DB::transaction(function ()  use ($request) {
+                $recruitment = new Recruitments();
+                $data = [
+                    'game_id'           => $request->game_id,
+                    'hardware_id'       => $request->hardware_id,
+                    'comment'           => $request->comment,
+                    'ps_id'             => $request->ps_id,
+                    'steam_id'          => $request->steam_id,
+                    'origin_id'         => $request->origin_id,
+                    'skype_id'          => $request->skype_id,
+                    'discord_id'        => $request->discord_id,
+                    'friend_code_id'    => $request->friend_code_id,
+                ];
+                $recruitment->fill($data)->save();
+            });
+        } catch (\Exception $error) {
+            return Common::makeNotFoundResponse($error);
+        }
+
+        return Common::makeResponse([
+            'state'  => 'success'
+        ]);
+    }
+
+
+    /**
+     * 日付フォーマット 「Y/m/d」
+     */
+    public function formatDate(string $date): string
+    {
+        if (empty($date)) return '';
+        $carbon = new Carbon($date);
+        return $carbon->format('Y/m/d H:i:s');
     }
 }

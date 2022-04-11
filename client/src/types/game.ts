@@ -23,7 +23,7 @@ export interface RecruitmentPage {
     purpose_name: string;
   }>;
   comment: string;
-  psid: string;
+  ps_id: string;
   select_hardware_id: number;
   select_purpose_id: number;
 }
@@ -31,4 +31,8 @@ export interface RecruitmentPage {
 export interface Hardware {
   hardware_id: number;
   hardware_name: string;
+}
+export interface PurposeList {
+  purpose_id: number;
+  purpose_name: string;
 }

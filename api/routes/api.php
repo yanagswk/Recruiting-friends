@@ -21,3 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/game_list', [GameController::class, 'getGameList']);
 Route::get('/game', [GameController::class, 'getGame']);
+
+Route::post('/recruitment', [GameController::class, 'recruitment']);

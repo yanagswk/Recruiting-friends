@@ -22,6 +22,7 @@ export const getGame = (game_id: number) => {
  */
 export const postRecruitment = (
   game_id: number,
+  hardware_id: number,
   comment: string,
   ps_id?: string,
   steam_id?: string,
@@ -32,12 +33,13 @@ export const postRecruitment = (
 ) => {
   return axios.post("api/recruitment", {
     game_id: game_id,
+    hardware_id: hardware_id,
     comment: comment,
-    psid: ps_id,
-    steamid: steam_id,
-    originid: origin_id,
-    skypeid: skype_id,
-    discordid: discord_id,
-    friend_code: friend_code_id,
+    ps_id: ps_id,
+    steam_id: steam_id,
+    origin_id: origin_id,
+    skype_id: skype_id,
+    discord_id: discord_id,
+    friend_code_id: friend_code_id,
   });
 };

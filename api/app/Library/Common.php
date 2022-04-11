@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 namespace App\Library;
 
-class Common 
+class Common
 {
 	/**
 	 * バリデーション時レスポンス
@@ -17,10 +17,10 @@ class Common
 	/**
 	 * Not Foundレスポンス
 	 */
-	public static function makeNotFoundResponse()
+	public static function makeNotFoundResponse(string $message=null)
 	{
 		return response()->json([
-			'error' => 'data not found'
+			'error' => $message ?? []
 		], 404);
 	}
 
@@ -33,5 +33,3 @@ class Common
 	}
 
 }
-
-?>
