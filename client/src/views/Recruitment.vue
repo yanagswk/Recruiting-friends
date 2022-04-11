@@ -60,57 +60,39 @@ const recruitmentSubmit = async (
     discord_id,
     friend_code_id
   );
-  console.log(response);
-  if (response.status === 200) {
-    // TODO: あらーとこんぽーねんと
-    alert("掲示板へ書き込みました");
-    // TODO: リロードなしでやりたい
-    location.reload();
-    // const routeId = route.params.id;
-    // router.push(`/recruitment/${routeId}`);
-    // router.go({ path: router.currentRoute.value });
-  }
+  // TODO: あらーとこんぽーねんと
+  alert("掲示板へ書き込みました");
+  // TODO: リロードなしでやりたい
+  location.reload();
+  // const routeId = route.params.id;
+  // router.push(`/recruitment/${routeId}`);
+  // router.go({ path: router.currentRoute.value });
 };
-
-// const needRecruitmentIdMethod = () => {
-//   const needRecruitmentId = [];
-//   Object.keys(state.recruitment_id_list).forEach(function (key) {
-//     if (state.recruitment_id_list[key] === true) {
-//       needRecruitmentId.push(key);
-//     }
-//   });
-//   return needRecruitmentId;
-// };
 
 /**
  * ゲーム一覧取得api
  */
 const apiGetGame = async () => {
   const apiGame = await getGame(Number(route.params.id));
-  // game.value = apiGame.data.game;
-  console.log(apiGame);
-  state.game_id = apiGame.data.game.id;
-  state.game_name = apiGame.data.game.game_name;
-  state.game_image_url = apiGame.data.game.game_image_url;
-  state.hardware_id = apiGame.data.game.hardware_id;
-  state.hardware_name = apiGame.data.game.hardware_name;
-  state.hardwares = apiGame.data.hardwares;
-  state.recruitment_list = apiGame.data.recruitment_list;
+  state.game_id = apiGame.game.id;
+  state.game_name = apiGame.game.game_name;
+  state.game_image_url = apiGame.game.game_image_url;
+  state.hardware_id = apiGame.game.hardware_id;
+  state.hardware_name = apiGame.game.hardware_name;
+  state.hardwares = apiGame.hardwares;
+  state.recruitment_list = apiGame.recruitment_list;
 
-  state.is_ps = Boolean(apiGame.data.game.is_ps);
-  state.is_discord = Boolean(apiGame.data.game.is_discord);
-  state.is_friend_code = Boolean(apiGame.data.game.is_friend_code);
-  state.is_origin = Boolean(apiGame.data.game.is_origin);
-  state.is_skype = Boolean(apiGame.data.game.is_skype);
-  state.is_steam = Boolean(apiGame.data.game.is_steam);
+  state.is_ps = Boolean(apiGame.game.is_ps);
+  state.is_discord = Boolean(apiGame.game.is_discord);
+  state.is_friend_code = Boolean(apiGame.game.is_friend_code);
+  state.is_origin = Boolean(apiGame.game.is_origin);
+  state.is_skype = Boolean(apiGame.game.is_skype);
+  state.is_steam = Boolean(apiGame.game.is_steam);
 
   if (state.hardwares.length) {
     state.init_hardware_id = state.hardwares[0].hardware_id;
     console.log(state);
   }
-  // if (state.purpose_list.length) {
-  //   state.select_purpose_id = state.purpose_list[0].purpose_id;
-  // }
 };
 apiGetGame();
 </script>

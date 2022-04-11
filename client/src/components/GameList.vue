@@ -10,13 +10,10 @@ const gameList = ref<GameList[]>([]);
  */
 const apiGetGameList = async () => {
   const apiGameList = await getGameList();
-  gameList.value = apiGameList.data.game_list;
-  console.log(apiGameList.data);
+  gameList.value = apiGameList.game_list;
 };
 
-onMounted(() => {
-  apiGetGameList();
-});
+apiGetGameList();
 </script>
 
 <template>

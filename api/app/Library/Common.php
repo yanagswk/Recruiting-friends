@@ -20,7 +20,7 @@ class Common
 	public static function makeNotFoundResponse(string $message=null)
 	{
 		return response()->json([
-			'error' => $message ?? []
+			'error' => $message
 		], 404);
 	}
 

@@ -10,12 +10,38 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
-apiClient.interceptors.response.use(
-  (response) => response, // 成功時レスポンス
-  // (error) => error.response || error // https://github.com/ynzy/vue3-h5-template/blob/main/src/utils/request.ts
+// api送信時
+apiClient.interceptors.request.use(
+  (config) => {
+    console.log(config);
+    return config;
+  },
   (error) => {
-    console.log(error);
-    return error.response || error;
+    console.error("error:", error);
+    return Promise.reject(error);
+  }
+);
+
+// api返却時
+apiClient.interceptors.response.use(
+  // 成功時レスポンス
+  (response) => {
+    console.log(response);
+    return response.data;
+  },
+  (error) => {
+    console.log(error.response || error);
+    switch (error.response.status) {
+      case 404:
+        return Promise.reject(error);
+      case 422:
+        // バリデーションエラー
+        // TODO: アラートコンポーネント処理
+        // return error.response;
+        return Promise.reject(error);
+      default:
+        return Promise.reject(error);
+    }
   }
 ); // エラーで認証(ログイン)してるかを見る
 

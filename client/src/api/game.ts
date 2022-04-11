@@ -4,13 +4,13 @@ import axios from "@/https";
 /**
  * ゲーム一覧取得
  */
-export const getGameList = () => {
+export const getGameList = (): any => {
   return axios.get("api/game_list");
 };
 /**
  * ゲーム取得
  */
-export const getGame = (game_id: number) => {
+export const getGame = (game_id: number): any => {
   return axios.get("api/game", {
     params: {
       game_id: game_id,

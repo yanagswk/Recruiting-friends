@@ -24,7 +24,7 @@ class GameController extends Controller
             ->get()
             ->toArray();
         if (empty($game_list)) {
-            return Common::makeNotFoundResponse();
+            return Common::makeNotFoundResponse('game list not found');
         }
         // 階層を上げる
         $format_game_list = array_map(function ($game) {
@@ -59,7 +59,7 @@ class GameController extends Controller
             ->first()
             ->toArray();
         if (empty($game)) {
-            return Common::makeNotFoundResponse();
+            return Common::makeNotFoundResponse('game not found');
         }
         // 階層を上げる
         if (!empty($game['hardware'])) {
@@ -138,7 +138,7 @@ class GameController extends Controller
             'discord_id'        => 'nullable|string',
             'friend_code_id'    => 'nullable|string',
         ]);
-        \Log::debug($request->all());
+        // \Log::debug($request->all());
         if ($validation->fails()) {
             return Common::makeValidationErrorResponse($validation->errors());
         }
