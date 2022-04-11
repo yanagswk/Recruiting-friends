@@ -2,13 +2,17 @@
 import { ref, reactive, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getGame, postRecruitment } from "@/api/game";
-import { RecruitmentPage, Hardware, PurposeList } from "@/types/game";
+import {
+  RecruitmentPage,
+  Hardware,
+  PurposeList,
+  RecruitmentList,
+} from "@/types/game";
 import RecruitmentForm from "@/components/recruitment/Form.vue";
+import UserList from "@/components/recruitment/UserList.vue";
 
-// const router = useRouter();
+const router = useRouter();
 const route = useRoute();
-
-const PS4PS5 = "3";
 
 // const selectId = ref<number>();
 
@@ -21,8 +25,9 @@ const state = reactive({
   hardware_name: "",
   hardwares: [] as Hardware[],
   purpose_list: [] as PurposeList[],
+  recruitment_list: [] as RecruitmentList[],
   comment: "",
-  select_hardware_id: 0,
+  init_hardware_id: 0,
   select_purpose_id: 0,
   is_ps: false,
   is_discord: false,
@@ -32,8 +37,10 @@ const state = reactive({
   is_steam: false,
 });
 
+/**
+ * フレンド募集 送信
+ */
 const recruitmentSubmit = async (
-  hardware_id: number,
   comment: string,
   ps_id: string,
   steam_id: string,
@@ -44,7 +51,7 @@ const recruitmentSubmit = async (
 ) => {
   const response = await postRecruitment(
     state.game_id,
-    hardware_id,
+    state.init_hardware_id,
     comment,
     ps_id,
     steam_id,
@@ -54,6 +61,15 @@ const recruitmentSubmit = async (
     friend_code_id
   );
   console.log(response);
+  if (response.status === 200) {
+    // TODO: あらーとこんぽーねんと
+    alert("掲示板へ書き込みました");
+    // TODO: リロードなしでやりたい
+    location.reload();
+    // const routeId = route.params.id;
+    // router.push(`/recruitment/${routeId}`);
+    // router.go({ path: router.currentRoute.value });
+  }
 };
 
 // const needRecruitmentIdMethod = () => {
@@ -79,7 +95,7 @@ const apiGetGame = async () => {
   state.hardware_id = apiGame.data.game.hardware_id;
   state.hardware_name = apiGame.data.game.hardware_name;
   state.hardwares = apiGame.data.hardwares;
-  // state.purpose_list = apiGame.data.purpose_list;
+  state.recruitment_list = apiGame.data.recruitment_list;
 
   state.is_ps = Boolean(apiGame.data.game.is_ps);
   state.is_discord = Boolean(apiGame.data.game.is_discord);
@@ -89,13 +105,13 @@ const apiGetGame = async () => {
   state.is_steam = Boolean(apiGame.data.game.is_steam);
 
   if (state.hardwares.length) {
-    state.select_hardware_id = state.hardwares[0].hardware_id;
+    state.init_hardware_id = state.hardwares[0].hardware_id;
+    console.log(state);
   }
   // if (state.purpose_list.length) {
   //   state.select_purpose_id = state.purpose_list[0].purpose_id;
   // }
 };
-
 apiGetGame();
 </script>
 
@@ -119,7 +135,11 @@ apiGetGame();
     :is_skype="state.is_skype"
     :is_steam="state.is_steam"
     @recruitment="recruitmentSubmit"
+    v-model:selectHardwareId="state.init_hardware_id"
   />
   <!-- end -->
-  <div>text</div>
+
+  <!-- start -->
+  <UserList :recruitmentList="state.recruitment_list" />
+  <!-- end -->
 </template>

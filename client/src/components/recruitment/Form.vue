@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import { ref, defineEmits, onMounted, toRefs, watch } from "vue";
+import { ref } from "vue";
 import { Hardware } from "@/types/game";
 
-const selectHardwareId = ref<number>(0);
-
-const psId = ref<string>("");
-const discordId = ref<string>("");
-const friendCodeId = ref<string>("");
-const originId = ref<string>("");
-const skypeId = ref<string>("");
-const steamId = ref<string>("");
-
-const comment = ref<string>("");
+const psId = ref("");
+const discordId = ref("");
+const friendCodeId = ref("");
+const originId = ref("");
+const skypeId = ref("");
+const steamId = ref("");
+const comment = ref("");
 
 interface Props {
   hardwares: Hardware[];
@@ -21,6 +18,7 @@ interface Props {
   is_skype: boolean;
   is_discord: boolean;
   is_friend_code: boolean;
+  selectHardwareId: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -35,7 +33,6 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (
     event: "recruitment",
-    select_hardware_id: number,
     comment: string,
     ps_id: string,
     steam_id: string,
@@ -44,23 +41,11 @@ const emit = defineEmits<{
     discord_id: string,
     friend_code_id: string
   ): void;
+  (event: "update:selectHardwareId", test_select_hardware_id: number): void;
 }>();
 
-// const setHardwareId = () => {
-//   console.log(props.hardwares.length);
-//   if (props.hardwares.length) {
-//     console.log("入れます");
-//     selectHardwareId.value = props.hardwares[0].hardware_id;
-//   }
-// };
-// setHardwareId();
-
-// const hardwares = toRefs(props);
-// watch(checkHardwares, () => {
-//   setHardwareId();
-// });
-
 const validate = () => {
+  // TODO: バリデーション
   // if (!psId.value.length || !comment.value.length) {
   if (!comment.value.length) {
     alert("PSIDもしくはコメントを入力してください");
@@ -75,7 +60,6 @@ const recruitmentSubmit = (): boolean | void => {
   }
   emit(
     "recruitment",
-    selectHardwareId.value,
     comment.value,
     psId.value,
     steamId.value,
@@ -84,6 +68,14 @@ const recruitmentSubmit = (): boolean | void => {
     discordId.value,
     friendCodeId.value
   );
+};
+
+/**
+ * 機種のセレクトボタン検知
+ */
+const changeHardwareId = (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  emit("update:selectHardwareId", Number(target.value));
 };
 </script>
 
@@ -96,15 +88,16 @@ const recruitmentSubmit = (): boolean | void => {
       <div>
         <div class="mb-3">
           <div class="text-sm text-gray-700 block mb-1 font-medium">機種</div>
+          <!-- v-model="selectHardwareId" -->
           <select
-            v-model.number="selectHardwareId"
+            v-on:change="changeHardwareId"
+            :value="selectHardwareId"
             class="block appearance-none w-6/12 bg-white border border-gray-200 text-gray-700 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
           >
             <option
               v-for="(hardware, index) in hardwares"
               :key="index"
               :value="hardware.hardware_id"
-              selected
             >
               {{ hardware.hardware_name }}
             </option>

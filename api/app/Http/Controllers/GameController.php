@@ -88,7 +88,8 @@ class GameController extends Controller
         // $purpose_list = PurposeMaster::all()->toArray();
 
         // フレンド募集一覧取得
-        $recruitment_master = Recruitments::where('game_id', $request->game_id)
+        $recruitment_master = Recruitments::with('hardware:hardware_id,hardware_name')
+            ->where('game_id', $request->game_id)
             ->orderBy('created_at', 'desc')
             ->active()
             ->get()
@@ -102,6 +103,7 @@ class GameController extends Controller
                     'id'    => $recruitment['id'],
                     'game_id'    => $recruitment['game_id'],
                     'hardware_id'    => $recruitment['hardware_id'],
+                    'hardware_name'    => (isset($recruitment['hardware']['hardware_name'])) ? $recruitment['hardware']['hardware_name'] : '' ,
                     'comment'    => $recruitment['comment'],
                     'ps_id'    => $recruitment['ps_id'],
                     'steam_id'    => $recruitment['steam_id'],
@@ -174,6 +176,6 @@ class GameController extends Controller
     {
         if (empty($date)) return '';
         $carbon = new Carbon($date);
-        return $carbon->format('Y/m/d H:i:s');
+        return $carbon->format('Y/m/d');
     }
 }

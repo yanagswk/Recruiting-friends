@@ -36,3 +36,17 @@ export interface PurposeList {
   purpose_id: number;
   purpose_name: string;
 }
+export interface RecruitmentList {
+  id: number;
+  game_id: number;
+  hardware_id: number;
+  hardware_name: string;
+  comment: number;
+  ps_id: string;
+  steam_id: string;
+  origin_id: string;
+  skype_id: string;
+  discord_id: string;
+  friend_code_id: string;
+  created_at: string;
+}

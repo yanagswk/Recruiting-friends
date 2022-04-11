@@ -26,6 +26,11 @@ class Recruitments extends Model
         'updated_at'
     ];
 
+    public function hardware()
+    {
+        return $this->hasOne(HardwareMaster::class, 'hardware_id', 'hardware_id');
+    }
+
     /**
      * 有効なテーブル
      */
