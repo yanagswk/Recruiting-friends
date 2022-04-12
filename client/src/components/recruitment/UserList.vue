@@ -30,7 +30,7 @@ defineProps<{
         </div>
         <!-- <div class="text-indigo-500 md:text-lg font-bold text-center"> -->
         <div
-          class="rounded-full text-white px-3 py-1 text-xs font-medium text-center"
+          class="rounded-full text-white px-3 py-1 text-xs font-medium text-center w-16 mx-auto"
           :class="hardwareColor[recruitment.hardware_id]"
         >
           {{ recruitment.hardware_name }}
@@ -38,28 +38,28 @@ defineProps<{
         <!-- ハードウェア表示 -->
         <div class="mb-3">
           <div v-if="recruitment.ps_id">
-            <span class="text-xs">PSID:</span
-            ><span class="ml-1">{{ recruitment.ps_id }}</span>
+            <span class="text-xs">PSID:</span>
+            <span class="ml-1">{{ recruitment.ps_id }}</span>
           </div>
           <div v-if="recruitment.steam_id">
-            <span class="text-xs">SteamID:</span
-            ><span class="ml-1">{{ recruitment.steam_id }}</span>
+            <span class="text-xs">SteamID:</span>
+            <span class="ml-1">{{ recruitment.steam_id }}</span>
           </div>
           <div v-if="recruitment.origin_id">
-            <span class="text-xs">OriginID:</span
-            ><span class="ml-1">{{ recruitment.origin_id }}</span>
+            <span class="text-xs">OriginID:</span>
+            <span class="ml-1">{{ recruitment.origin_id }}</span>
           </div>
           <div v-if="recruitment.skype_id">
-            <span class="text-xs">SkypeId:</span
-            ><span class="ml-1">{{ recruitment.skype_id }}</span>
+            <span class="text-xs">SkypeId:</span>
+            <span class="ml-1">{{ recruitment.skype_id }}</span>
           </div>
           <div v-if="recruitment.discord_id">
-            <span class="text-xs">DiscordID:</span
-            ><span class="ml-1">{{ recruitment.discord_id }}</span>
+            <span class="text-xs">DiscordID:</span>
+            <span class="ml-1">{{ recruitment.discord_id }}</span>
           </div>
           <div v-if="recruitment.friend_code_id">
-            <span class="text-xs">フレンドコード:</span
-            ><span class="ml-1">{{ recruitment.friend_code_id }}</span>
+            <span class="text-xs">フレンドコード:</span>
+            <span class="ml-1">{{ recruitment.friend_code_id }}</span>
           </div>
         </div>
         <p class="text-gray-500 text-sm md:text-base text-center mb-3 md:mb-4">
