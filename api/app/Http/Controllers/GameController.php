@@ -35,8 +35,18 @@ class GameController extends Controller
             }
         }, $game_list);
 
+        // ハードウェア一覧取得
+        $hardware_master = HardwareMaster::where('hardware_id', '<>', HardwareMaster::PS4PS5)
+            ->get()
+            ->pluck("hardware_name", "hardware_id")
+            ->toArray();
+        if (empty($hardware_master)) {
+            $hardware_master = [];
+        }
+
         return Common::makeResponse([
-            'game_list' => $format_game_list
+            'game_list' => $format_game_list,
+            'hardware_master'   => $hardware_master
         ]);
     }
 
@@ -94,7 +104,7 @@ class GameController extends Controller
             ->active()
             ->get()
             ->toArray();
-        \Log::debug($recruitment_master);
+        // \Log::debug($recruitment_master);
 
         $recruitment_list = [];
         if (!empty($recruitment_master)) {

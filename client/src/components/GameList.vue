@@ -3,17 +3,21 @@ import { onMounted, ref } from "vue";
 import { getGameList } from "@/api/game";
 import { GameList } from "@/types/game";
 
-const gameList = ref<GameList[]>([]);
+// const gameList = ref<GameList[]>([]);
+
+defineProps<{
+  gameList: GameList[];
+}>();
 
 /**
  * ゲーム一覧取得api
  */
-const apiGetGameList = async () => {
-  const apiGameList = await getGameList();
-  gameList.value = apiGameList.game_list;
-};
+// const apiGetGameList = async () => {
+//   const apiGameList = await getGameList();
+//   gameList.value = apiGameList.game_list;
+// };
 
-apiGetGameList();
+// apiGetGameList();
 </script>
 
 <template>

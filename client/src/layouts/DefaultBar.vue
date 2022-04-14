@@ -12,6 +12,7 @@ import DropdownMenu from "@/components/DropdownMenu.vue";
           @click="show = !show"
         /> -->
       <div>ゆるボ！</div>
+      <!-- <div>test</div> -->
       <div class="flex items-center space-x-4">
         <DropdownMenu />
       </div>
