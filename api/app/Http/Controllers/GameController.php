@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Library\Common;
+use App\Mail\ContactMail;
 use App\Models\Game;
 use App\Models\HardwareMaster;
 use App\Models\PurposeMaster;
@@ -10,6 +11,7 @@ use App\Models\Recruitments;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class GameController extends Controller
@@ -172,6 +174,43 @@ class GameController extends Controller
         } catch (\Exception $error) {
             return Common::makeNotFoundResponse($error);
         }
+
+        return Common::makeResponse([
+            'state'  => 'success'
+        ]);
+    }
+
+
+    /**
+     * 追加してほしいゲームをメール送信
+     */
+    public function requestAddGameMail(Request $request)
+    {   
+        $game_name = $request->input('game_name');
+        $hardware_id_list = $request->input('hardware_id_list');
+        $message = $request->input('message');
+
+        $validation = Validator::make($request->all(), [
+            'game_name'         => 'required|string',
+            'hardware_id_list'  => 'nullable|array',
+            'message'           => 'nullable|string',
+        ]);
+        if ($validation->fails()) {
+            return Common::makeValidationErrorResponse($validation->errors());
+        }
+
+        $hardware = HardwareMaster::whereIn("hardware_id", $hardware_id_list)
+            ->pluck("hardware_name");
+        if ($hardware->isEmpty()) {
+            return Common::makeNotFoundResponse('hardware not found');
+        }
+        $contact = [
+            'game_name'  => $game_name,
+            'hardware_name'  => implode("・", $hardware->toArray()),
+            'message'   => $message
+        ];
+
+        Mail::to("yanagimassu@gmail.com")->send(new ContactMail($contact));
 
         return Common::makeResponse([
             'state'  => 'success'

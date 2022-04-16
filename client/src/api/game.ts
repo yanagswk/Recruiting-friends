@@ -43,3 +43,17 @@ export const postRecruitment = (
     friend_code_id: friend_code_id,
   });
 };
+/**
+ * 追加したいゲームのリクエスト
+ */
+export const postRequestAddGameMail = (
+  game_name: string,
+  hardware_id_list?: number[],
+  message?: string
+) => {
+  return axios.post("api/request_add_game_mail", {
+    game_name: game_name,
+    hardware_id_list: hardware_id_list,
+    message: message,
+  });
+};

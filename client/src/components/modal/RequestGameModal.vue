@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { postRequestAddGameMail } from "@/api/game";
 
 const game_name = ref("");
 const select_hardware_id = ref([]);
@@ -19,8 +20,32 @@ const resetHardwareId = () => {
   select_hardware_id.value = [];
 };
 
-const sendAddGameMail = () => {
-  confirm("送信しますか？");
+const validation = () => {
+  if (!game_name.value) {
+    return false;
+  }
+  return true;
+};
+
+const requestAddGameMail = async () => {
+  if (!validation()) {
+    alert("ゲーム名は必須です");
+    return false;
+  }
+  if (confirm("送信しますか？")) {
+    const active_hardware_id = select_hardware_id.value.filter((id) => {
+      return id !== null || id !== undefined;
+    });
+    const response = await postRequestAddGameMail(
+      game_name.value,
+      active_hardware_id,
+      message.value
+    );
+    if (response) {
+      alert("送信が完了しました");
+      emit("close");
+    }
+  }
 };
 </script>
 
@@ -36,6 +61,7 @@ const sendAddGameMail = () => {
           追加してほしいゲーム情報を入力してください
         </h3>
         <button @click="emit('close')" class="text-black close-modal">
+          <!-- TODO: アイコン -->
           &cross;
         </button>
       </div>
@@ -90,7 +116,7 @@ const sendAddGameMail = () => {
         </button>
         <button
           class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white"
-          @click="sendAddGameMail"
+          @click="requestAddGameMail"
         >
           OK
         </button>
