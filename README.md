@@ -1,2 +1,5 @@
-- ダッシュボード参考  
-  https://reffect.co.jp/vue/vue-admin-dashboard#i-13
+- バックエンド  
+  Laravel 9.2
+
+- フロントエンド  
+  Vue 3.2
