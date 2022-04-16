@@ -39,14 +39,14 @@ apiGetGameList();
           こんにちは
         </h1> -->
     <h1 class="text-3xl font-bold mb-4">フレンド募集 ゲーム一覧</h1>
-    <div>追加してほしいゲームがある場合はこちら</div>
-    <button
-      @click="showModal"
-      class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white m-5 show-modal"
-    >
-      show modal
-    </button>
-
+    <div class="mb-4">
+      追加してほしいゲームがある場合は
+      <span
+        @click="showModal"
+        class="text-blue-600 hover:text-blue-700 cursor-pointer font-extrabold"
+        >こちら</span
+      >
+    </div>
     <transition name="fade">
       <RequestGameModal
         v-if="isModal"
@@ -64,7 +64,8 @@ apiGetGameList();
 .fade-leave-active {
   transition: opacity 0.3s;
 }
-.fade-enter-from, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>
