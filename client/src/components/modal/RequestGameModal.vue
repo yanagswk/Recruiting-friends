@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { postRequestAddGameMail } from "@/api/game";
+import { useStore } from "@/store/index";
+import * as MutationTypes from "@/store/mutationType";
 
 const game_name = ref("");
 const select_hardware_id = ref([]);
 const message = ref("");
+
+const store = useStore();
+// store.commit(MutationTypes.IS_LOADING,)
 
 defineProps<{
   hardwareList: {
@@ -33,18 +38,19 @@ const requestAddGameMail = async () => {
     return false;
   }
   if (confirm("送信しますか？")) {
+    store.commit(MutationTypes.IS_LOADING, true);
     const active_hardware_id = select_hardware_id.value.filter((id) => {
       return id !== null || id !== undefined;
     });
-    const response = await postRequestAddGameMail(
+    await postRequestAddGameMail(
       game_name.value,
       active_hardware_id,
       message.value
     );
-    if (response) {
-      alert("送信が完了しました");
-      emit("close");
-    }
+    // TODO: アラートコンポーネント
+    alert("送信しました");
+    store.commit(MutationTypes.IS_LOADING, false);
+    emit("close");
   }
 };
 </script>
