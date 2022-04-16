@@ -2,10 +2,16 @@ import { InjectionKey } from "vue";
 import { createStore, Store, useStore as baseUseStore } from "vuex";
 import * as MutationTypes from "./mutationType";
 
+interface FlashMsg {
+  is_display: boolean;
+  message: string;
+  color: string;
+}
+
 // stateの型定義
 interface State {
   is_loading: boolean;
-  // message?: string;
+  flash_msg: FlashMsg;
 }
 
 // storeをprovide/injectするためのキー
@@ -15,16 +21,26 @@ export const key: InjectionKey<Store<State>> = Symbol();
 export const store = createStore<State>({
   state: {
     is_loading: false,
-    // message: "",
+    flash_msg: {
+      is_display: false,
+      message: "",
+      color: "",
+    },
   },
   mutations: {
     [MutationTypes.IS_LOADING](state, is_loading: boolean) {
       state.is_loading = is_loading;
     },
-    // [MutationTypes.IS_LOADING](state, loading: State) {
-    //   state.is_loading = loading.is_loading;
-    //   state.message = loading.message ?? "";
-    // },
+    [MutationTypes.SHOW_FLASH_MSG](state, flash_msg: FlashMsg) {
+      state.flash_msg.message = flash_msg.message;
+      state.flash_msg.color = flash_msg.color;
+      state.flash_msg.is_display = true;
+    },
+    [MutationTypes.DEL_FLASH_MSG](state) {
+      state.flash_msg.message = "";
+      state.flash_msg.color = "";
+      state.flash_msg.is_display = false;
+    },
   },
 });
 

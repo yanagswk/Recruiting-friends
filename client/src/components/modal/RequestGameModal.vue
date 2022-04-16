@@ -9,7 +9,6 @@ const select_hardware_id = ref([]);
 const message = ref("");
 
 const store = useStore();
-// store.commit(MutationTypes.IS_LOADING,)
 
 defineProps<{
   hardwareList: {
@@ -33,6 +32,13 @@ const validation = () => {
 };
 
 const requestAddGameMail = async () => {
+  store.commit(MutationTypes.SHOW_FLASH_MSG, {
+    message: "成功しました！",
+    color: "green",
+  });
+  emit("close");
+  return false;
+
   if (!validation()) {
     alert("ゲーム名は必須です");
     return false;
