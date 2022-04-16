@@ -32,13 +32,6 @@ const validation = () => {
 };
 
 const requestAddGameMail = async () => {
-  store.commit(MutationTypes.SHOW_FLASH_MSG, {
-    message: "成功しました！",
-    color: "green",
-  });
-  emit("close");
-  return false;
-
   if (!validation()) {
     alert("ゲーム名は必須です");
     return false;
@@ -53,10 +46,12 @@ const requestAddGameMail = async () => {
       active_hardware_id,
       message.value
     );
-    // TODO: アラートコンポーネント
-    alert("送信しました");
     store.commit(MutationTypes.IS_LOADING, false);
     emit("close");
+    store.commit(MutationTypes.SHOW_FLASH_MSG, {
+      message: "成功しました！",
+      color: "green",
+    });
   }
 };
 </script>
