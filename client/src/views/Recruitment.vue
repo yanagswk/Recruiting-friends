@@ -49,7 +49,7 @@ const recruitmentSubmit = async (
   discord_id: string,
   friend_code_id: string
 ) => {
-  const response = await postRecruitment(
+  await postRecruitment(
     state.game_id,
     state.init_hardware_id,
     comment,
@@ -91,7 +91,6 @@ const apiGetGame = async () => {
 
   if (state.hardwares.length) {
     state.init_hardware_id = state.hardwares[0].hardware_id;
-    console.log(state);
   }
 };
 apiGetGame();

@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Hardware } from "@/types/game";
+import { useStore } from "@/store/index";
+import * as MutationTypes from "@/store/mutationType";
+import { COMMENT_ERR } from "@/store/common";
+// import _ from "lodash";
 
 const psId = ref("");
 const discordId = ref("");
@@ -9,6 +13,8 @@ const originId = ref("");
 const skypeId = ref("");
 const steamId = ref("");
 const comment = ref("");
+
+const store = useStore();
 
 interface Props {
   hardwares: Hardware[];
@@ -45,10 +51,8 @@ const emit = defineEmits<{
 }>();
 
 const validate = () => {
-  // TODO: バリデーション
-  // if (!psId.value.length || !comment.value.length) {
-  if (!comment.value.length) {
-    alert("PSIDもしくはコメントを入力してください");
+  // TODO: id系のバリデーション
+  if (!comment.value) {
     return false;
   }
   return true;
@@ -56,6 +60,7 @@ const validate = () => {
 
 const recruitmentSubmit = (): boolean | void => {
   if (!validate()) {
+    store.commit(MutationTypes.ERR_FLASH_MSG, COMMENT_ERR);
     return false;
   }
   emit(
