@@ -6,10 +6,19 @@ import { getGameList } from "@/api/game";
 import { GameList as GameListType } from "@/types/game";
 import RequestGameModal from "@/components/modal/RequestGameModal.vue";
 
+import { useStore } from "@/store/index";
+import * as MutationTypes from "@/store/mutationType";
+
+const store = useStore();
+
 const isModal = ref(false);
 
 const showModal = () => {
-  isModal.value = true;
+  // isModal.value = true;
+  store.commit(MutationTypes.SHOW_FLASH_MSG, {
+    message: "成功しました！",
+    color: "green",
+  });
 };
 const closeModal = () => {
   isModal.value = false;

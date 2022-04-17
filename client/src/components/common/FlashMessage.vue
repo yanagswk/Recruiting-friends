@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useStore } from "@/store/index";
 import * as MutationTypes from "@/store/mutationType";
 
 const store = useStore();
-
-const display = ref(false);
-const message = ref("");
-const color = ref("");
-const timeoutId = ref<number | null>(null);
 
 /**
  * フラッシュメッセージ削除
@@ -19,9 +14,11 @@ const delFlashMsg = () => {
 </script>
 
 <template>
-  <div class="fixed left-0 right-0 z-50 top-1">
+  <div
+    v-show="store.state.flash_msg.is_display"
+    class="fixed left-0 right-0 z-50 top-1"
+  >
     <div
-      v-show="store.state.flash_msg.is_display"
       class="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800"
     >
       <div class="flex items-center justify-center w-12 bg-emerald-500">
@@ -36,7 +33,6 @@ const delFlashMsg = () => {
         </svg>
       </div>
 
-      <!-- <div class="px-4 py-2 -mx-3"> -->
       <div class="px-4 py-2 -mx-3">
         <div class="mx-3">
           <span class="font-semibold text-emerald-500 dark:text-emerald-400">{{

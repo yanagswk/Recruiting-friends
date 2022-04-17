@@ -35,11 +35,14 @@ export const store = createStore<State>({
       state.flash_msg.message = flash_msg.message;
       state.flash_msg.color = flash_msg.color;
       state.flash_msg.is_display = true;
+      setTimeout(() => {
+        store.commit(MutationTypes.DEL_FLASH_MSG);
+      }, 5000);
     },
     [MutationTypes.DEL_FLASH_MSG](state) {
-      state.flash_msg.message = "";
-      state.flash_msg.color = "";
       state.flash_msg.is_display = false;
+      // state.flash_msg.message = "";
+      // state.flash_msg.color = "";
     },
   },
 });

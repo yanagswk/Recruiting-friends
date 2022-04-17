@@ -32,10 +32,19 @@ const validation = () => {
 };
 
 const requestAddGameMail = async () => {
+  emit("close");
+  store.commit(MutationTypes.SHOW_FLASH_MSG, {
+    message: "成功しました！",
+    color: "green",
+  });
+  return false;
+
   if (!validation()) {
+    // TODO: フラッシュメッセージ
     alert("ゲーム名は必須です");
     return false;
   }
+  // TODO: モーダル
   if (confirm("送信しますか？")) {
     store.commit(MutationTypes.IS_LOADING, true);
     const active_hardware_id = select_hardware_id.value.filter((id) => {
