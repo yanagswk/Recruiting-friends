@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { postRequestAddGameMail } from "@/api/game";
 import { useStore } from "@/store/index";
 import * as MutationTypes from "@/store/mutationType";
+import { SUCCESS_MSG, GAME_NAME_ERR } from "@/store/common";
 
 const game_name = ref("");
 const select_hardware_id = ref([]);
@@ -32,16 +33,8 @@ const validation = () => {
 };
 
 const requestAddGameMail = async () => {
-  emit("close");
-  store.commit(MutationTypes.SHOW_FLASH_MSG, {
-    message: "成功しました！",
-    color: "green",
-  });
-  return false;
-
   if (!validation()) {
-    // TODO: フラッシュメッセージ
-    alert("ゲーム名は必須です");
+    store.commit(MutationTypes.ERR_FLASH_MSG, GAME_NAME_ERR);
     return false;
   }
   // TODO: モーダル
@@ -57,10 +50,7 @@ const requestAddGameMail = async () => {
     );
     store.commit(MutationTypes.IS_LOADING, false);
     emit("close");
-    store.commit(MutationTypes.SHOW_FLASH_MSG, {
-      message: "成功しました！",
-      color: "green",
-    });
+    store.commit(MutationTypes.INFO_FLASH_MSG, SUCCESS_MSG);
   }
 };
 </script>

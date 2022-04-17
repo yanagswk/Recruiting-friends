@@ -14,11 +14,7 @@ const store = useStore();
 const isModal = ref(false);
 
 const showModal = () => {
-  // isModal.value = true;
-  store.commit(MutationTypes.SHOW_FLASH_MSG, {
-    message: "成功しました！",
-    color: "green",
-  });
+  isModal.value = true;
 };
 const closeModal = () => {
   isModal.value = false;

@@ -21,7 +21,10 @@ const delFlashMsg = () => {
     <div
       class="flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800"
     >
-      <div class="flex items-center justify-center w-12 bg-emerald-500">
+      <div
+        class="flex items-center justify-center w-12"
+        :class="store.state.flash_msg.bg_color"
+      >
         <svg
           class="w-6 h-6 text-white fill-current"
           viewBox="0 0 40 40"
@@ -33,14 +36,16 @@ const delFlashMsg = () => {
         </svg>
       </div>
 
-      <div class="px-4 py-2 -mx-3">
+      <div class="px-4 py-4 -mx-3">
         <div class="mx-3">
-          <span class="font-semibold text-emerald-500 dark:text-emerald-400">{{
-            store.state.flash_msg.message
-          }}</span>
-          <p class="text-sm text-gray-600 dark:text-gray-200">
+          <span
+            class="font-semibol"
+            :class="store.state.flash_msg.text_color"
+            >{{ store.state.flash_msg.message }}</span
+          >
+          <!-- <p class="text-sm text-gray-600 dark:text-gray-200">
             Your account was registered!
-          </p>
+          </p> -->
         </div>
       </div>
 
