@@ -60,6 +60,7 @@ class GameController extends Controller
         $game_id = $request->input('game_id');
         $validation = Validator::make($request->all(), [
             'game_id'   => 'required|integer',
+            'page'      => 'nullable|integer',
         ]);
         if ($validation->fails()) {
             return Common::makeValidationErrorResponse($validation->errors());
@@ -104,13 +105,16 @@ class GameController extends Controller
             ->where('game_id', $request->game_id)
             ->orderBy('created_at', 'desc')
             ->active()
-            ->get()
+            // ->get()
+            ->paginate(3)   // TODO: 直す
             ->toArray();
-        // \Log::debug($recruitment_master);
+        \Log::debug($recruitment_master);
 
         $recruitment_list = [];
+        $page_data = [];
         if (!empty($recruitment_master)) {
-            foreach ($recruitment_master as $index => $recruitment)
+            // TODO: data
+            foreach ($recruitment_master['data'] as $index => $recruitment)
                 $recruitment_list[] = [
                     'id'    => $recruitment['id'],
                     'game_id'    => $recruitment['game_id'],
@@ -125,12 +129,19 @@ class GameController extends Controller
                     'friend_code_id'    => $recruitment['friend_code_id'],
                     'created_at'    => $this->formatDate($recruitment['created_at']),
                 ];
+            $page_data = [
+                'total' => $recruitment_master["total"],
+                'per_page' => $recruitment_master["per_page"],
+                'current_page' => $recruitment_master["current_page"],
+                'last_page' => $recruitment_master["last_page"]
+            ];
         }
 
         return Common::makeResponse([
             'game'      => $game,
             'hardwares'  => $hardwares,
-            'recruitment_list' => $recruitment_list
+            'recruitment_list' => $recruitment_list,
+            'page_data' => $page_data
         ]);
     }
 

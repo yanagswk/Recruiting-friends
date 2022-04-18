@@ -9,11 +9,14 @@ export const getGameList = (): any => {
 };
 /**
  * ゲーム取得
+ * @param game_id number ゲームid
+ * @param page number 何ページ目か
  */
-export const getGame = (game_id: number): any => {
+export const getGame = (game_id: number, page: number): any => {
   return axios.get("api/game", {
     params: {
       game_id: game_id,
+      page: page,
     },
   });
 };
