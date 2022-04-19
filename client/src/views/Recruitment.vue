@@ -6,9 +6,19 @@ import { Hardware, PurposeList, RecruitmentList } from "@/types/game";
 import RecruitmentForm from "@/components/recruitment/Form.vue";
 import UserList from "@/components/recruitment/UserList.vue";
 import Pagenation from "@/components/common/Pagenation.vue";
+import { useStore } from "@/store/index";
+import * as MutationTypes from "@/store/mutationType";
+import { SUCCESS_MSG } from "@/store/common";
+import {
+  setSessionStore,
+  getSessionStore,
+  removeSessionStore,
+} from "@/store/storage";
+import { remove } from "@vue/shared";
 
 const router = useRouter();
 const route = useRoute();
+const store = useStore();
 
 //ページネーションの設定
 const pagenation_data = reactive({
@@ -63,8 +73,8 @@ const recruitmentSubmit = async (
     discord_id,
     friend_code_id
   );
-  // TODO: あらーとこんぽーねんと
-  alert("掲示板へ書き込みました");
+  // store.commit(MutationTypes.INFO_FLASH_MSG, SUCCESS_MSG);
+  setSessionStore(MutationTypes.INFO_FLASH_MSG, SUCCESS_MSG);
   // TODO: リロードなしでやりたい
   location.reload();
   // const routeId = route.params.id;
@@ -74,6 +84,7 @@ const recruitmentSubmit = async (
 
 /**
  * 現在のページを設定して、api呼び出し
+ * (ページネーション用)
  */
 const getCurrentPage = (currentPage: number) => {
   pagenation_data.currentPage = currentPage;
@@ -81,7 +92,7 @@ const getCurrentPage = (currentPage: number) => {
 };
 
 /**
- * ゲーム一覧取得api
+ * ゲーム情報取得api
  */
 const apiGetGame = async () => {
   const apiGame = await getGame(
@@ -111,7 +122,24 @@ const apiGetGame = async () => {
     state.init_hardware_id = state.hardwares[0].hardware_id;
   }
 };
+
+/**
+ * セッションメッセージがあれば表示
+ */
+const displayMessage = () => {
+  const message = getSessionStore(MutationTypes.INFO_FLASH_MSG);
+  if (message) {
+    store.commit(MutationTypes.INFO_FLASH_MSG, SUCCESS_MSG);
+    removeSessionStore(MutationTypes.INFO_FLASH_MSG);
+  }
+};
+
+// ゲーム情報呼び出し
 apiGetGame();
+
+onMounted(() => {
+  displayMessage();
+});
 </script>
 
 <template>
