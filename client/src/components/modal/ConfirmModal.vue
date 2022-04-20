@@ -21,7 +21,7 @@ const emit = defineEmits<{
       v-if="props.is_display"
       id="popup-modal"
       tabindex="-1"
-      class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-30"
+      class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-30 z-20"
     >
       <div class="relative p-4 w-full max-w-md h-full md:h-auto">
         <!-- Modal content -->
@@ -73,7 +73,7 @@ const emit = defineEmits<{
               @click="emit('hideModal', true)"
               data-modal-toggle="popup-modal"
               type="button"
-              class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+              class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white mr-3"
             >
               OK
             </button>
@@ -81,9 +81,9 @@ const emit = defineEmits<{
               @click="emit('hideModal', false)"
               data-modal-toggle="popup-modal"
               type="button"
-              class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+              class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
             >
-              キャンセル
+              Cancel
             </button>
           </div>
         </div>

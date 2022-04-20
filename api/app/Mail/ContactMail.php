@@ -20,7 +20,7 @@ class ContactMail extends Mailable
     {
         $this->game_name = $contact["game_name"];
         $this->hardware_name = $contact["hardware_name"];
-        $this->message = $contact["message"];
+        $this->user_message = $contact["user_message"];
     }
 
     /**
@@ -36,7 +36,7 @@ class ContactMail extends Mailable
             ->with([
                 'game_name' => $this->game_name,
                 'hardware_name' => $this->hardware_name,
-                'message' => $this->message,
+                'user_message' => $this->user_message,
             ]);
     }
 }

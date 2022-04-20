@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="flex items-center justify-center z-10">
+  <div class="flex items-center justify-center z-0">
     <form method="GET">
       <div class="relative text-gray-600">
         <span class="absolute inset-y-0 left-0 flex items-center pl-2">

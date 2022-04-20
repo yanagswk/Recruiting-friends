@@ -3,11 +3,12 @@ import { ref } from "vue";
 import { postRequestAddGameMail } from "@/api/game";
 import { useStore } from "@/store/index";
 import * as MutationTypes from "@/store/mutationType";
-import { SUCCESS_MSG, GAME_NAME_ERR } from "@/store/common";
+import { SUCCESS_MSG, GAME_NAME_ERR, CONFIRM } from "@/store/common";
+import ConfirmModal from "@/components/modal/ConfirmModal.vue";
 
 const game_name = ref("");
 const select_hardware_id = ref([]);
-const message = ref("");
+const user_message = ref("");
 
 const store = useStore();
 
@@ -32,32 +33,52 @@ const validation = () => {
   return true;
 };
 
+/**
+ * ゲーム追加のメールを送るapi
+ */
 const requestAddGameMail = async () => {
+  store.commit(MutationTypes.IS_LOADING, true);
+  const active_hardware_id = select_hardware_id.value.filter((id) => {
+    return id !== null || id !== undefined;
+  });
+  await postRequestAddGameMail(
+    game_name.value,
+    active_hardware_id,
+    user_message.value
+  );
+  store.commit(MutationTypes.IS_LOADING, false);
+  emit("close");
+  store.commit(MutationTypes.INFO_FLASH_MSG, SUCCESS_MSG);
+};
+
+// モーダル用
+const is_display = ref(false);
+
+/**
+ * モーダル表示
+ */
+const showModal = () => {
   if (!validation()) {
     store.commit(MutationTypes.ERR_FLASH_MSG, GAME_NAME_ERR);
     return false;
   }
-  // TODO: モーダル
-  if (confirm("送信しますか？")) {
-    store.commit(MutationTypes.IS_LOADING, true);
-    const active_hardware_id = select_hardware_id.value.filter((id) => {
-      return id !== null || id !== undefined;
-    });
-    await postRequestAddGameMail(
-      game_name.value,
-      active_hardware_id,
-      message.value
-    );
-    store.commit(MutationTypes.IS_LOADING, false);
-    emit("close");
-    store.commit(MutationTypes.INFO_FLASH_MSG, SUCCESS_MSG);
+  is_display.value = true;
+};
+
+/**
+ * モーダルOKの場合api叩く
+ */
+const modalConfirm = (is_result: boolean) => {
+  is_display.value = false;
+  if (is_result) {
+    requestAddGameMail();
   }
 };
 </script>
 
 <template>
   <div
-    class="modal h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50 z-20"
+    class="modal h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50 z-10"
   >
     <!-- modal -->
     <div class="bg-white rounded shadow-lg w-10/12 md:w-1/3">
@@ -117,7 +138,7 @@ const requestAddGameMail = async () => {
         <div class="mb-3">
           <h3 class="font-bold">管理者へのメッセージ</h3>
           <textarea
-            v-model="message"
+            v-model="user_message"
             placeholder="管理者へのメッセージ"
             class="w-full h-25"
           ></textarea>
@@ -125,17 +146,26 @@ const requestAddGameMail = async () => {
       </div>
       <div class="flex justify-end items-center w-100 border-t p-3">
         <button
+          class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white mr-3"
+          @click="showModal"
+        >
+          <!-- <button
+          class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white"
+          @click="requestAddGameMail"
+        > -->
+          OK
+        </button>
+        <button
           @click="emit('close')"
-          class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white mr-1 close-modal"
+          class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
         >
           Cancel
         </button>
-        <button
-          class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-white"
-          @click="requestAddGameMail"
-        >
-          OK
-        </button>
+        <ConfirmModal
+          :is_display="is_display"
+          @hideModal="modalConfirm"
+          :message="CONFIRM"
+        />
       </div>
     </div>
   </div>

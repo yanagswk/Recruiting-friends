@@ -6,5 +6,5 @@
   <div>【お問い合わせ内容】</div>
   <div>ゲーム名: {{ $game_name }}</div>
   <div>ハードウェア: {{ $hardware_name }}</div>
-  <div>メッセージ: {{ $game_name }}</div>
+  <div>メッセージ: {{ $user_message }}</div>
 </div>

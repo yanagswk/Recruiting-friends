@@ -199,26 +199,29 @@ class GameController extends Controller
     {   
         $game_name = $request->input('game_name');
         $hardware_id_list = $request->input('hardware_id_list');
-        $message = $request->input('message');
+        $user_message = $request->input('user_message');
 
         $validation = Validator::make($request->all(), [
             'game_name'         => 'required|string',
             'hardware_id_list'  => 'nullable|array',
-            'message'           => 'nullable|string',
+            'user_message'      => 'nullable|string',
         ]);
         if ($validation->fails()) {
             return Common::makeValidationErrorResponse($validation->errors());
         }
 
-        $hardware = HardwareMaster::whereIn("hardware_id", $hardware_id_list)
+        $hardware = [];
+        if (!empty($hardware_id_list)) {
+            $hardware = HardwareMaster::whereIn("hardware_id", $hardware_id_list)
             ->pluck("hardware_name");
-        if ($hardware->isEmpty()) {
-            return Common::makeNotFoundResponse('hardware not found');
+            if ($hardware->isEmpty()) {
+                return Common::makeNotFoundResponse('hardware not found');
+            }
         }
         $contact = [
             'game_name'  => $game_name,
-            'hardware_name'  => implode("・", $hardware->toArray()),
-            'message'   => $message
+            'hardware_name'  => ($hardware) ? implode("・", $hardware->toArray()) : "指定なし",
+            'user_message'   => $user_message ?? ""
         ];
 
         Mail::to("yanagimassu@gmail.com")->send(new ContactMail($contact));

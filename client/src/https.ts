@@ -1,10 +1,11 @@
 // https://qiita.com/Esfahan/items/1b41b64d0a605732a0dd
 import axios, { AxiosInstance } from "axios";
-import { useStore } from "@/store/index";
+// import { useStore } from "@/store/index";  // vueファイルではない場合にVuexをimportする場合はuseStoreではなくstoreをimport
+import { store } from "@/store/index";
 import * as MutationTypes from "@/store/mutationType";
 import { ERR } from "@/store/common";
 
-const store = useStore();
+// const store = useStore();
 
 const apiClient: AxiosInstance = axios.create({
   // APIのURI
@@ -13,6 +14,7 @@ const apiClient: AxiosInstance = axios.create({
   headers: {
     "Content-type": "application/json",
   },
+  timeout: 5000,
 });
 
 // api送信時
@@ -37,6 +39,9 @@ apiClient.interceptors.response.use(
   (error) => {
     console.log(error.response || error);
     store.commit(MutationTypes.ERR_FLASH_MSG, ERR);
+    if (store.state.is_loading) {
+      store.commit(MutationTypes.IS_LOADING, false);
+    }
     switch (error.response.status) {
       case 404:
         return Promise.reject(error);

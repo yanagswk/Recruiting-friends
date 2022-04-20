@@ -52,11 +52,11 @@ export const postRecruitment = (
 export const postRequestAddGameMail = (
   game_name: string,
   hardware_id_list?: number[],
-  message?: string
+  user_message?: string
 ) => {
   return axios.post("api/request_add_game_mail", {
     game_name: game_name,
     hardware_id_list: hardware_id_list,
-    message: message,
+    user_message: user_message,
   });
 };
