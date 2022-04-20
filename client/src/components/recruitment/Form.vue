@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { Hardware } from "@/types/game";
 import { useStore } from "@/store/index";
 import * as MutationTypes from "@/store/mutationType";
-import { COMMENT_ERR } from "@/store/common";
+import { COMMENT_ERR, CONFIRM } from "@/store/common";
+import ConfirmModal from "@/components/modal/ConfirmModal.vue";
 // import _ from "lodash";
 
 const psId = ref("");
@@ -50,19 +51,7 @@ const emit = defineEmits<{
   (event: "update:selectHardwareId", test_select_hardware_id: number): void;
 }>();
 
-const validate = () => {
-  // TODO: id系のバリデーション
-  if (!comment.value) {
-    return false;
-  }
-  return true;
-};
-
 const recruitmentSubmit = (): boolean | void => {
-  if (!validate()) {
-    store.commit(MutationTypes.ERR_FLASH_MSG, COMMENT_ERR);
-    return false;
-  }
   emit(
     "recruitment",
     comment.value,
@@ -73,6 +62,41 @@ const recruitmentSubmit = (): boolean | void => {
     discordId.value,
     friendCodeId.value
   );
+};
+
+// モーダル用
+const is_display = ref(false);
+
+/**
+ * モーダルOKの場合は募集送信
+ */
+const modalConfirm = (is_result: boolean) => {
+  is_display.value = false;
+  if (is_result) {
+    recruitmentSubmit();
+  }
+};
+
+/**
+ * バリデーション
+ */
+const validate = () => {
+  // TODO: id系のバリデーション
+  if (!comment.value) {
+    return false;
+  }
+  return true;
+};
+
+/**
+ * モーダル表示
+ */
+const showModal = () => {
+  if (!validate()) {
+    store.commit(MutationTypes.ERR_FLASH_MSG, COMMENT_ERR);
+    return false;
+  }
+  is_display.value = true;
 };
 
 /**
@@ -89,7 +113,8 @@ const changeHardwareId = (e: Event) => {
     <!-- <h1 class="font-medium text-3xl">Add User</h1> -->
     <!-- <p class="text-gray-600">募集する目的などを入力してください</p> -->
 
-    <form @submit.prevent="recruitmentSubmit">
+    <!-- <form @submit.prevent="recruitmentSubmit"> -->
+    <form>
       <div>
         <div class="mb-3">
           <div class="text-sm text-gray-700 block mb-1 font-medium">機種</div>
@@ -190,12 +215,19 @@ const changeHardwareId = (e: Event) => {
       </div>
 
       <div class="mt-8">
+        <!-- type="submit" -->
         <button
-          type="submit"
+          @click="showModal()"
+          type="button"
           class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 disabled:opacity-50"
         >
           募集する
         </button>
+        <ConfirmModal
+          :is_display="is_display"
+          @hideModal="modalConfirm"
+          :message="CONFIRM"
+        />
       </div>
     </form>
   </div>

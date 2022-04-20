@@ -2,6 +2,7 @@ import { InjectionKey } from "vue";
 import { createStore, Store, useStore as baseUseStore } from "vuex";
 import * as MutationTypes from "./mutationType";
 
+// フラッシュメッセージ
 interface FlashMsg {
   is_display: boolean;
   message: string;
