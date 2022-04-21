@@ -91,6 +91,8 @@ const getCurrentPage = (currentPage: number) => {
   apiGetGame();
 };
 
+const api_flag = ref(false);
+
 /**
  * ゲーム情報取得api
  */
@@ -99,6 +101,7 @@ const apiGetGame = async () => {
     Number(route.params.id),
     pagenation_data.currentPage
   );
+  api_flag.value = true;
   state.game_id = apiGame.game.id;
   state.game_name = apiGame.game.game_name;
   state.game_image_url = apiGame.game.game_image_url;
@@ -143,35 +146,35 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <!-- <router-link :to="{ name: 'DashBoard' }" class="text-blue-500" -->
-    <router-link to="/" class="text-blue-500">一覧ページへ</router-link>
+  <!-- <router-link :to="{ name: 'DashBoard' }" class="text-blue-500" -->
+  <router-link to="/" class="text-blue-500">一覧ページへ</router-link>
+  <div v-show="api_flag">
+    <h1
+      class="text-gray-800 text-2xl sm:text-3xl font-bold text-center mb-4 md:mb-6"
+    >
+      ({{ state.hardware_name }}) {{ state.game_name }}用 募集掲示板
+    </h1>
+    <!-- 応募フォーム -->
+    <RecruitmentForm
+      :hardwares="state.hardwares"
+      :is_ps="state.is_ps"
+      :is_discord="state.is_discord"
+      :is_friend_code="state.is_friend_code"
+      :is_origin="state.is_origin"
+      :is_skype="state.is_skype"
+      :is_steam="state.is_steam"
+      @recruitment="recruitmentSubmit"
+      v-model:selectHardwareId="state.init_hardware_id"
+    />
+    <!-- ページネーション -->
+    <Pagenation
+      :showPages="pagenation_data.showPages"
+      :currentPage="pagenation_data.currentPage"
+      :totalCount="pagenation_data.totalCount"
+      :totalPages="pagenation_data.totalPages"
+      @currentPage="getCurrentPage"
+    />
+    <!-- ユーザー情報 -->
+    <UserList :recruitmentList="state.recruitment_list" />
   </div>
-  <h1
-    class="text-gray-800 text-2xl sm:text-3xl font-bold text-center mb-4 md:mb-6"
-  >
-    ({{ state.hardware_name }}) {{ state.game_name }}用 募集掲示板
-  </h1>
-  <!-- 応募フォーム -->
-  <RecruitmentForm
-    :hardwares="state.hardwares"
-    :is_ps="state.is_ps"
-    :is_discord="state.is_discord"
-    :is_friend_code="state.is_friend_code"
-    :is_origin="state.is_origin"
-    :is_skype="state.is_skype"
-    :is_steam="state.is_steam"
-    @recruitment="recruitmentSubmit"
-    v-model:selectHardwareId="state.init_hardware_id"
-  />
-  <!-- ページネーション -->
-  <Pagenation
-    :showPages="pagenation_data.showPages"
-    :currentPage="pagenation_data.currentPage"
-    :totalCount="pagenation_data.totalCount"
-    :totalPages="pagenation_data.totalPages"
-    @currentPage="getCurrentPage"
-  />
-  <!-- ユーザー情報 -->
-  <UserList :recruitmentList="state.recruitment_list" />
 </template>

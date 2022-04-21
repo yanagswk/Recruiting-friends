@@ -106,9 +106,8 @@ class GameController extends Controller
             ->orderBy('created_at', 'desc')
             ->active()
             // ->get()
-            ->paginate(3)   // TODO: 直す
+            ->paginate(config('game.paginate'))   // TODO: 直す
             ->toArray();
-        \Log::debug($recruitment_master);
 
         $recruitment_list = [];
         $page_data = [];
