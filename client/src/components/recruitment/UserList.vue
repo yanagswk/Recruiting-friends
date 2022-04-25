@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { RecruitmentList } from "@/types/game";
 
 const hardwareColor = {
@@ -22,47 +21,61 @@ defineProps<{
     <div
       v-for="recruitment in recruitmentList"
       :key="recruitment.id"
-      class="flex flex-col items-center bg-gray-100 rounded-lg p-4 lg:p-6"
+      class="flex flex-col bg-gray-100 rounded-lg p-3"
     >
-      <div>
-        <div class="text-xs mb-1">
-          {{ recruitment.created_at }}
-        </div>
+      <div class="text-xs mb-2">
+        {{ recruitment.created_at }}
+      </div>
+      <div class="text-center">
         <!-- <div class="text-indigo-500 md:text-lg font-bold text-center"> -->
         <div
-          class="rounded-full text-white px-3 py-1 text-xs font-medium text-center w-16 mx-auto"
+          class="rounded-full text-white px-3 py-1 text-xs font-medium w-4/5 mx-auto"
           :class="hardwareColor[recruitment.hardware_id]"
         >
           {{ recruitment.hardware_name }}
         </div>
         <!-- ハードウェア表示 -->
-        <div class="mb-3">
+        <div class="my-3">
           <div v-if="recruitment.ps_id">
-            <span class="text-xs">PSID:</span>
-            <span class="ml-1">{{ recruitment.ps_id }}</span>
+            <div class="text-xs">PSID</div>
+            <div class="font-medium break-words">
+              {{ recruitment.ps_id }}
+            </div>
           </div>
           <div v-if="recruitment.steam_id">
-            <span class="text-xs">SteamID:</span>
-            <span class="ml-1">{{ recruitment.steam_id }}</span>
+            <div class="text-xs">SteamID</div>
+            <div class="font-medium break-words">
+              {{ recruitment.steam_id }}
+            </div>
           </div>
           <div v-if="recruitment.origin_id">
-            <span class="text-xs">OriginID:</span>
-            <span class="ml-1">{{ recruitment.origin_id }}</span>
+            <div class="text-xs">OriginID</div>
+            <div class="font-medium break-words">
+              {{ recruitment.origin_id }}
+            </div>
           </div>
           <div v-if="recruitment.skype_id">
-            <span class="text-xs">SkypeId:</span>
-            <span class="ml-1">{{ recruitment.skype_id }}</span>
+            <div class="text-xs">SkypeId</div>
+            <div class="font-medium break-words">
+              {{ recruitment.skype_id }}
+            </div>
           </div>
           <div v-if="recruitment.discord_id">
-            <span class="text-xs">DiscordID:</span>
-            <span class="ml-1">{{ recruitment.discord_id }}</span>
+            <div class="text-xs">DiscordID</div>
+            <div class="font-medium break-words">
+              {{ recruitment.discord_id }}
+            </div>
           </div>
           <div v-if="recruitment.friend_code_id">
-            <span class="text-xs">フレンドコード:</span>
-            <span class="ml-1">{{ recruitment.friend_code_id }}</span>
+            <div class="text-xs">フレンドコード</div>
+            <div class="font-medium break-words">
+              {{ recruitment.friend_code_id }}
+            </div>
           </div>
         </div>
-        <p class="text-gray-500 text-sm md:text-base text-center mb-3 md:mb-4">
+        <p
+          class="text-gray-600 text-sm md:text-base mb-3 md:mb-4 p-1 bg-slate-200 break-words"
+        >
           {{ recruitment.comment }}
         </p>
       </div>
