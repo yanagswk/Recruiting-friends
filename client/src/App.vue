@@ -13,7 +13,7 @@ import FlashMessage from "@/components/common/FlashMessage.vue";
   <!-- <div class="bg-white py-6 sm:py-8 lg:py-12">
     <div class="max-w-screen-md px-4 md:px-8 mx-auto"> -->
   <div class="bg-white py-6 sm:py-8 lg:py-12">
-    <div class="max-w-screen-lg px-4 md:px-8 mx-auto">
+    <div class="max-w-screen-lg px-4 md:px-8 mx-auto wrapper">
       <!-- <transition mode="out-in" name="web"> -->
       <!-- <keep-alive> -->
       <router-view></router-view>
