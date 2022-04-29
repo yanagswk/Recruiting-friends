@@ -9,7 +9,8 @@ import { ERR } from "@/store/common";
 
 const apiClient: AxiosInstance = axios.create({
   // APIのURI
-  baseURL: "http://localhost:80",
+  // baseURL: "http://localhost:80",
+  baseURL: process.env.VUE_APP_API_BASE_URL,
   // リクエストヘッダ
   headers: {
     "Content-type": "application/json",
@@ -33,6 +34,8 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   // 成功時レスポンス
   (response) => {
+    console.log(process.env.VUE_APP_API_BASE_URL);
+    console.log(response);
     return response.data;
   },
   (error) => {
