@@ -20,25 +20,25 @@ module.exports = {
     // コンポーネントの複数ワードルール解除
     "vue/multi-word-component-names": "off",
     // ネーミングルールを追加
-    "@typescript-eslint/naming-convention": [
-      "error",
-      // {
-      //   selector: "default",
-      //   format: ["camelCase"],
-      // },
-      // {
-      //   selector: ["property"],
-      //   format: ["camelCase", "PascalCase", "chain-case"],
-      // },
-      {
-        // selector: ["class", "enum", "interface", "typeAlias", "typeParameter"],
-        // format: ["PascalCase"],
-      },
-      {
-        // selector: "variable",
-        // modifiers: ["const"],
-        // format: ["camelCase", "UPPER_CASE"],
-      },
-    ],
+    // "@typescript-eslint/naming-convention": [
+    //   "error",
+    //   // {
+    //   //   selector: "default",
+    //   //   format: ["camelCase"],
+    //   // },
+    //   // {
+    //   //   selector: ["property"],
+    //   //   format: ["camelCase", "PascalCase", "chain-case"],
+    //   // },
+    //   {
+    //     // selector: ["class", "enum", "interface", "typeAlias", "typeParameter"],
+    //     // format: ["PascalCase"],
+    //   },
+    //   {
+    //     // selector: "variable",
+    //     // modifiers: ["const"],
+    //     // format: ["camelCase", "UPPER_CASE"],
+    //   },
+    // ],
   },
 };
