@@ -9,7 +9,6 @@ import { ERR } from "@/store/common";
 
 const apiClient: AxiosInstance = axios.create({
   // APIのURI
-  // baseURL: "http://localhost:80",
   baseURL: process.env.VUE_APP_API_BASE_URL,
   // リクエストヘッダ
   headers: {

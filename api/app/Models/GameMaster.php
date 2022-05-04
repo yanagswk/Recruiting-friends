@@ -26,6 +26,11 @@ class GameMaster extends Model
         return $this->hasOne(HardwareMaster::class, 'hardware_id', 'hardware_id');
     }
 
+    public function hardwareFriend()
+    {
+        return $this->hasMany(HardwareFriendMaster::class, 'game_id', 'id');
+    }
+
     /**
      * TODO:追加
      */

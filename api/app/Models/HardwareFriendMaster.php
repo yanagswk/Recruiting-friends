@@ -18,4 +18,9 @@ class HardwareFriendMaster extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function hardware()
+    {
+        return $this->belongsTo(HardwareMaster::class, 'hardware_id', 'hardware_id');
+    }
 }

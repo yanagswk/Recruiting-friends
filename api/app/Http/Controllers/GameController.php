@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Library\Common;
 use App\Mail\ContactMail;
-use App\Models\Game;
+use App\Models\GameMaster;
 use App\Models\HardwareMaster;
 use App\Models\PurposeMaster;
+use App\Models\HardwareFriendMaster;
 use App\Models\Recruitments;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,20 +23,39 @@ class GameController extends Controller
     public function getGameList(Request $request)
     {
         // ゲーム取得
-        $game_list = Game::with('hardware:hardware_id,hardware_name')
+        $game_master = GameMaster::select('id', 'game_name', 'url_name', 'game_image_url')
+            ->with(['hardwareFriend' => function ($query) {
+                $query->with(['hardware']);
+            }])
             ->get()
             ->toArray();
-        if (empty($game_list)) {
+
+        \Log::debug($game_master);
+
+        if (empty($game_master)) {
             return Common::makeNotFoundResponse('game list not found');
         }
-        // 階層を上げる
-        $format_game_list = array_map(function ($game) {
-            if (!empty($game['hardware'])) {
-                $game = array_merge($game, $game['hardware']);
-                unset($game['hardware']);
-                return $game;
+
+        $game_list = [];
+        foreach ($game_master as $index => $game) {
+            $hardware_list = [];
+            foreach ($game['hardware_friend'] as $i => $v) {
+                $hardware_list[$v['hardware']['hardware_id']] = $v['hardware']['hardware_name'];
             }
-        }, $game_list);
+            $game_list[] = [
+                'id'                => $game['id'],
+                'game_name'         => $game['game_name'],
+                'url_name'          => $game['url_name'],
+                'game_image_url'    => $game['game_image_url'],
+                'hardware_list'     => array_unique($hardware_list)
+            ];
+        }
+
+        // $hardware_friend_master = HardwareFriendMaster::with(['hardware:hardware_id,hardware_name'])
+        //     ->get()
+        //     ->toArray();
+
+        \Log::debug($game_list);
 
         // ハードウェア一覧取得
         $hardware_master = HardwareMaster::where('hardware_id', '<>', HardwareMaster::PS4PS5)
@@ -47,8 +67,8 @@ class GameController extends Controller
         }
 
         return Common::makeResponse([
-            'game_list' => $format_game_list,
-            'hardware_master'   => $hardware_master
+            'game_list' => $game_list,
+            'hardware_list'   => $hardware_master
         ]);
     }
 
@@ -118,7 +138,7 @@ class GameController extends Controller
                     'id'    => $recruitment['id'],
                     'game_id'    => $recruitment['game_id'],
                     'hardware_id'    => $recruitment['hardware_id'],
-                    'hardware_name'    => (isset($recruitment['hardware']['hardware_name'])) ? $recruitment['hardware']['hardware_name'] : '' ,
+                    'hardware_name'    => (isset($recruitment['hardware']['hardware_name'])) ? $recruitment['hardware']['hardware_name'] : '',
                     'comment'    => $recruitment['comment'],
                     'ps_id'    => $recruitment['ps_id'],
                     'steam_id'    => $recruitment['steam_id'],
@@ -195,7 +215,7 @@ class GameController extends Controller
      * 追加してほしいゲームをメール送信
      */
     public function requestAddGameMail(Request $request)
-    {   
+    {
         $game_name = $request->input('game_name');
         $hardware_id_list = $request->input('hardware_id_list');
         $user_message = $request->input('user_message');
@@ -212,7 +232,7 @@ class GameController extends Controller
         $hardware = [];
         if (!empty($hardware_id_list)) {
             $hardware = HardwareMaster::whereIn("hardware_id", $hardware_id_list)
-            ->pluck("hardware_name");
+                ->pluck("hardware_name");
             if ($hardware->isEmpty()) {
                 return Common::makeNotFoundResponse('hardware not found');
             }
