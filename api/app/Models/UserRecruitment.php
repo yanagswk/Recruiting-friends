@@ -4,18 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Game extends Model
+class UserRecruitment extends Model
 {
     use HasFactory;
 
-    protected $table = 'game';
+    protected $table = 'user_recruitment';
 
     protected $fillable = [
-        'game_name',
-        'game_image_url',
-        'hardware_id',
+        'game_id',
+        'comment',
+        'is_invalid',
         'created_at',
         'updated_at'
     ];
@@ -26,7 +25,7 @@ class Game extends Model
     }
 
     /**
-     * TODO:追加
+     * 有効なテーブル
      */
     public function scopeActive($query)
     {

@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_recruitment', function (Blueprint $table) {
+        Schema::create('hardware_friend_master', function (Blueprint $table) {
             $table->id();
             $table->integer('game_id');
-            // $table->integer('hardware_id');
-            $table->text('comment');
-            $table->boolean('is_invalid')->default(0);
+            $table->integer('hardware_id');
+            $table->integer('friend_id');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recruitment');
+        Schema::dropIfExists('hardware_friend_master');
     }
 };

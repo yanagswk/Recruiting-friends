@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_recruitment', function (Blueprint $table) {
+        Schema::create('friend_master', function (Blueprint $table) {
             $table->id();
-            $table->integer('game_id');
-            // $table->integer('hardware_id');
-            $table->text('comment');
-            $table->boolean('is_invalid')->default(0);
+            $table->string('friend_id_name');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recruitment');
+        Schema::dropIfExists('friend_master');
     }
 };
