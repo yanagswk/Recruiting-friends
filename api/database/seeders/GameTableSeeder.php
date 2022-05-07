@@ -139,12 +139,12 @@ class GameTableSeeder extends Seeder
         }
         if (!DB::table('friend_master')->where('id', 1)->exists()) {
             DB::table('friend_master')->insert([
-                ['friend_id_name' => 'PS_ID'],
-                ['friend_id_name' => 'Origin_ID'],
-                ['friend_id_name' => 'Skype_ID'],
-                ['friend_id_name' => 'Discord_ID'],
-                ['friend_id_name' => 'Steam_ID'],
-                ['friend_id_name' => 'Friend_Code'],
+                ['friend_id_name' => 'ps_id'],
+                ['friend_id_name' => 'origin_id'],
+                ['friend_id_name' => 'skype_id'],
+                ['friend_id_name' => 'discord_id'],
+                ['friend_id_name' => 'steam_id'],
+                ['friend_id_name' => 'friend_code_id'],
             ]);
         }
         // if (!DB::table('purpose_master')->where('purpose_id', 1)->exists()) {

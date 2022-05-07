@@ -10,6 +10,8 @@ use App\Models\HardwareMaster;
 use App\Models\PurposeMaster;
 use App\Models\HardwareFriendMaster;
 use App\Models\Recruitments;
+use App\Models\UserFriendName;
+use App\Models\UserRecruitment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -193,26 +195,34 @@ class GameController extends Controller
             'discord_id'        => 'nullable|string',
             'friend_code_id'    => 'nullable|string',
         ]);
-        // \Log::debug($request->all());
+        \Log::debug($request->all());
         if ($validation->fails()) {
             return Common::makeValidationErrorResponse($validation->errors());
         }
 
         try {
             DB::transaction(function ()  use ($request) {
-                $recruitment = new Recruitments();
-                $data = [
-                    'game_id'           => $request->game_id,
-                    'hardware_id'       => $request->hardware_id,
-                    'comment'           => $request->comment,
-                    'ps_id'             => $request->ps_id,
-                    'steam_id'          => $request->steam_id,
-                    'origin_id'         => $request->origin_id,
-                    'skype_id'          => $request->skype_id,
-                    'discord_id'        => $request->discord_id,
-                    'friend_code_id'    => $request->friend_code_id,
-                ];
-                $recruitment->fill($data)->save();
+                $friend_list = $request->only('ps_id', 'steam_id', 'friend_code_id', 'origin_id', 'skype_id', 'discord_id');
+
+                foreach ($friend_list as $index => $friend) {
+                    if (is_null($friend)) {
+                        continue;
+                    }
+                    $friend_id = FriendMaster::where('friend_id_name', $index)->value('id');
+                    $data = [
+                        'game_id'               => $request->game_id,
+                        'hardware_id'           => (int)$request->hardware_id,
+                        'hardware_friend_id'    => $friend_id,
+                        'friend_name'           => $friend_list[$index]
+                    ];
+                }
+                UserFriendName::insert($data);
+
+                $user_recruitment = new UserRecruitment();
+                $user_recruitment->fill([
+                    'game_id'   => $request->game_id,
+                    'comment'   => $request->comment
+                ])->save();
             });
         } catch (\Exception $error) {
             return Common::makeNotFoundResponse($error);
