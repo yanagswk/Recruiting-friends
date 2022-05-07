@@ -15,3 +15,12 @@ export const hardwareColor = {
   5: "bg-green-500", // XboxOne
   6: "bg-yellow-500", // PC
 };
+
+export const FRIENDID = {
+  PSID: 1,
+  ORIGINID: 2,
+  SKYPEID: 3,
+  DISCORDID: 4,
+  STEAMID: 5,
+  FRIENDCODE: 6,
+};

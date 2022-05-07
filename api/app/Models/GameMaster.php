@@ -22,6 +22,7 @@ class GameMaster extends Model
     ];
 
     public function hardware()
+    // public function hardwareHasOne()
     {
         return $this->hasOne(HardwareMaster::class, 'hardware_id', 'hardware_id');
     }
@@ -29,6 +30,38 @@ class GameMaster extends Model
     public function hardwareFriend()
     {
         return $this->hasMany(HardwareFriendMaster::class, 'game_id', 'id');
+    }
+
+    /**
+     * リレーション先 hardware_master取得
+     * 中間テーブル game_hardware
+     */
+    public function hardwareToMany()
+    {
+        return $this->belongsToMany(
+            HardwareMaster::class,      // 接続先モデル
+            'game_hardware',            // 中間テーブル名
+            'game_id',                  // 接続元モデルを示す中間テーブルのidカラム
+            'hardware_id',              // 接続先モデルを示す中間テーブルのidカラム
+            'id',                       // 接続元のidカラム
+            'id'                        // 接続先のidカラム
+        );
+    }
+
+    /**
+     * リレーション先 friend_master取得
+     * 中間テーブル game_friend
+     */
+    public function friend()
+    {
+        return $this->belongsToMany(
+            FriendMaster::class,
+            'game_friend',
+            'game_id',
+            'friend_id',
+            'id',
+            'id'
+        );
     }
 
     /**

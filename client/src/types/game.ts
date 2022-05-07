@@ -25,7 +25,12 @@ export interface RecruitmentPage {
   select_purpose_id: number;
 }
 
+// TODO: Hardware.Friend被り　拡張interface作る
 export interface Hardware {
+  hardware_id: number;
+  hardware_name: string;
+}
+export interface Friend {
   hardware_id: number;
   hardware_name: string;
 }
@@ -46,4 +51,9 @@ export interface RecruitmentList {
   discord_id: string;
   friend_code_id: string;
   created_at: string;
+}
+export interface FriendIdList {
+  [key: number]: {
+    [key: number]: string;
+  }[];
 }

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
-import { Hardware } from "@/types/game";
+import { Hardware, FriendIdList, Friend } from "@/types/game";
 import { useStore } from "@/store/index";
 import * as MutationTypes from "@/store/mutationType";
-import { COMMENT_ERR, CONFIRM } from "@/store/common";
+import { COMMENT_ERR, CONFIRM, FRIENDID } from "@/store/common";
 import ConfirmModal from "@/components/modal/ConfirmModal.vue";
 // import _ from "lodash";
 
@@ -18,7 +18,9 @@ const comment = ref("");
 const store = useStore();
 
 interface Props {
-  hardwares: Hardware[];
+  hardware_list: Hardware[];
+  friend_list: Friend[];
+  friend_id_list: FriendIdList;
   is_ps: boolean;
   is_steam: boolean;
   is_origin: boolean;
@@ -118,88 +120,90 @@ const changeHardwareId = (e: Event) => {
       <div>
         <div class="mb-3">
           <div class="text-sm text-gray-700 block mb-1 font-medium">機種</div>
-          <!-- v-model="selectHardwareId" -->
           <select
             v-on:change="changeHardwareId"
             :value="selectHardwareId"
             class="block appearance-none w-6/12 bg-white border border-gray-200 text-gray-700 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
           >
             <option
-              v-for="(hardware, index) in hardwares"
+              v-for="(hardware, index) in friend_id_list"
               :key="index"
-              :value="hardware.hardware_id"
+              :value="index"
             >
-              {{ hardware.hardware_name }}
+              {{ hardware_list[index] }}
             </option>
           </select>
         </div>
 
-        <!-- start -->
-        <div v-if="props.is_ps" class="mb-3">
-          <div class="text-sm text-gray-700 block mb-1 font-medium">PSID</div>
-          <input
-            v-model="psId"
-            type="text"
-            class="appearance-none block w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-            placeholder="PSID"
-          />
-        </div>
-        <div v-if="props.is_discord" class="mb-3">
-          <div class="text-sm text-gray-700 block mb-1 font-medium">
-            discordId
+        <template
+          v-for="(friend_id, index) in friend_id_list[selectHardwareId]"
+          :key="index"
+        >
+          <div v-if="friend_id == FRIENDID.PSID" class="mb-3">
+            <div class="text-sm text-gray-700 block mb-1 font-medium">PSID</div>
+            <input
+              v-model="psId"
+              type="text"
+              class="appearance-none block placeholder:text-xs placeholder:text-gray-400 w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              placeholder="PSID"
+            />
           </div>
-          <input
-            v-model="discordId"
-            type="text"
-            class="appearance-none block w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-            placeholder="discordId"
-          />
-        </div>
-        <div v-if="props.is_friend_code" class="mb-3">
-          <div class="text-sm text-gray-700 block mb-1 font-medium">
-            フレンドコード
+          <div v-if="friend_id == FRIENDID.DISCORDID" class="mb-3">
+            <div class="text-sm text-gray-700 block mb-1 font-medium">
+              discordId
+            </div>
+            <input
+              v-model="discordId"
+              type="text"
+              class="appearance-none block placeholder:text-xs placeholder:text-gray-400 w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              placeholder="discordId"
+            />
           </div>
-          <input
-            v-model="friendCodeId"
-            type="text"
-            class="appearance-none block w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-            placeholder="フレンドコード"
-          />
-        </div>
-        <div v-if="props.is_origin" class="mb-3">
-          <div class="text-sm text-gray-700 block mb-1 font-medium">
-            originId
+          <div v-if="friend_id == FRIENDID.FRIENDCODE" class="mb-3">
+            <div class="text-sm text-gray-700 block mb-1 font-medium">
+              フレンドコード
+            </div>
+            <input
+              v-model="friendCodeId"
+              type="text"
+              class="appearance-none block placeholder:text-xs placeholder:text-gray-400 w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              placeholder="フレンドコード"
+            />
           </div>
-          <input
-            v-model="originId"
-            type="text"
-            class="appearance-none block w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-            placeholder="originId"
-          />
-        </div>
-        <div v-if="props.is_skype" class="mb-3">
-          <div class="text-sm text-gray-700 block mb-1 font-medium">
-            skypeId
+          <div v-if="friend_id == FRIENDID.ORIGINID" class="mb-3">
+            <div class="text-sm text-gray-700 block mb-1 font-medium">
+              originId
+            </div>
+            <input
+              v-model="originId"
+              type="text"
+              class="appearance-none block placeholder:text-xs placeholder:text-gray-400 w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              placeholder="originId"
+            />
           </div>
-          <input
-            v-model="skypeId"
-            type="text"
-            class="appearance-none block w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-            placeholder="skypeId"
-          />
-        </div>
-        <div v-if="props.is_steam" class="mb-3">
-          <div class="text-sm text-gray-700 block mb-1 font-medium">
-            steamId
+          <div v-if="friend_id == FRIENDID.SKYPEID" class="mb-3">
+            <div class="text-sm text-gray-700 block mb-1 font-medium">
+              skypeId
+            </div>
+            <input
+              v-model="skypeId"
+              type="text"
+              class="appearance-none block placeholder:text-xs placeholder:text-gray-400 w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              placeholder="skypeId"
+            />
           </div>
-          <input
-            v-model="steamId"
-            type="text"
-            class="appearance-none block w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-            placeholder="steamId"
-          />
-        </div>
-        <!-- end -->
+          <div v-if="friend_id == FRIENDID.STEAMID" class="mb-3">
+            <div class="text-sm text-gray-700 block mb-1 font-medium">
+              steamId
+            </div>
+            <input
+              v-model="steamId"
+              type="text"
+              class="appearance-none block placeholder:text-xs placeholder:text-gray-400 w-6/12 bg-white text-gray-700 border border-gray-200 rounded px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              placeholder="steamId"
+            />
+          </div>
+        </template>
 
         <div class="mb-3">
           <div class="text-sm text-gray-700 block mb-1 font-medium">

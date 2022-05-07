@@ -70,7 +70,64 @@ class GameTableSeeder extends Seeder
             ]);
         }
 
-        if (!DB::table('hardware_master')->where('hardware_id', 1)->exists()) {
+        if (!DB::table('game_friend')->where('id', 1)->exists()) {
+            DB::table('game_friend')->insert([
+                [
+                    'game_id' => 1,
+                    'friend_id'   => 1,
+                ],
+                [
+                    'game_id' => 1,
+                    'friend_id'   => 1,
+                ],
+                [
+                    'game_id' => 1,
+                    'friend_id'   => 2,
+                ],
+                [
+                    'game_id' => 1,
+                    'friend_id'   => 3,
+                ],
+                [
+                    'game_id' => 1,
+                    'friend_id'   => 4,
+                ],
+                [
+                    'game_id' => 2,
+                    'friend_id'   => 3,
+                ],
+                [
+                    'game_id' => 2,
+                    'friend_id'   => 4,
+                ],
+            ]);
+        }
+        if (!DB::table('game_hardware')->where('id', 1)->exists()) {
+            DB::table('game_hardware')->insert([
+                [
+                    'game_id' => 1,
+                    'hardware_id'   => 1,
+                ],
+                [
+                    'game_id' => 1,
+                    'hardware_id'   => 2,
+                ],
+                [
+                    'game_id' => 1,
+                    'hardware_id'   => 4,
+                ],
+                [
+                    'game_id' => 1,
+                    'hardware_id'   => 6,
+                ],
+                [
+                    'game_id' => 2,
+                    'hardware_id'   => 6,
+                ],
+            ]);
+        }
+
+        if (!DB::table('hardware_master')->where('id', 1)->exists()) {
             DB::table('hardware_master')->insert([
                 ['hardware_name' => 'PS4'],
                 ['hardware_name' => 'PS5'],

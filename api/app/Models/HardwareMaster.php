@@ -16,11 +16,22 @@ class HardwareMaster extends Model
     public const PS4PS5 = 3;    // PS4とPS5両方
 
     protected $fillable = [
-        'hardware_id',
+        // 'hardware_id',
         'hardware_name',
         'hardware_image_url',
         'created_at',
         'updated_at'
     ];
 
+    public function friend()
+    {
+        return $this->belongsToMany(
+            FriendMaster::class,
+            'hardware_friend_master',
+            'hardware_id',
+            'friend_id',
+            'hardware_id',
+            'id'
+        );
+    }
 }

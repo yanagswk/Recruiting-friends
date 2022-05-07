@@ -21,6 +21,14 @@ class HardwareFriendMaster extends Model
 
     public function hardware()
     {
-        return $this->belongsTo(HardwareMaster::class, 'hardware_id', 'hardware_id');
+        return $this->belongsTo(HardwareMaster::class, 'hardware_id', 'id');
+        // return $this->hasMany(HardwareMaster::class, 'hardware_id', 'hardware_id');
+        // return $this->hasMany(HardwareMaster::class, 'hardware_id', 'hardware_id');
+    }
+
+    public function friend()
+    {
+        return $this->belongsTo(FriendMaster::class, 'friend_id', 'id');
+        // return $this->belongsToMany(FriendMaster::class, 'friend_id', 'id');
     }
 }

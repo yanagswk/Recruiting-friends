@@ -2,7 +2,13 @@
 import { ref, reactive, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getGame, postRecruitment } from "@/api/game";
-import { Hardware, PurposeList, RecruitmentList } from "@/types/game";
+import {
+  Hardware,
+  PurposeList,
+  RecruitmentList,
+  FriendIdList,
+  Friend,
+} from "@/types/game";
 import RecruitmentForm from "@/components/recruitment/Form.vue";
 import UserList from "@/components/recruitment/UserList.vue";
 import Pagenation from "@/components/common/Pagenation.vue";
@@ -36,9 +42,11 @@ const state = reactive({
   game_image_url: "",
   hardware_id: 0,
   hardware_name: "",
-  hardwares: [] as Hardware[],
+  hardware_list: [] as Hardware[],
+  friend_list: [] as Friend[],
   purpose_list: [] as PurposeList[],
   recruitment_list: [] as RecruitmentList[],
+  friend_id_list: [] as FriendIdList[],
   comment: "",
   init_hardware_id: 0,
   select_purpose_id: 0,
@@ -73,13 +81,9 @@ const recruitmentSubmit = async (
     discord_id,
     friend_code_id
   );
-  // store.commit(MutationTypes.INFO_FLASH_MSG, SUCCESS_MSG);
   setSessionStore(MutationTypes.INFO_FLASH_MSG, SUCCESS_MSG);
   // TODO: リロードなしでやりたい
   location.reload();
-  // const routeId = route.params.id;
-  // router.push(`/recruitment/${routeId}`);
-  // router.go({ path: router.currentRoute.value });
 };
 
 /**
@@ -105,24 +109,30 @@ const apiGetGame = async () => {
   state.game_id = apiGame.game.id;
   state.game_name = apiGame.game.game_name;
   state.game_image_url = apiGame.game.game_image_url;
-  state.hardware_id = apiGame.game.hardware_id;
-  state.hardware_name = apiGame.game.hardware_name;
-  state.hardwares = apiGame.hardwares;
+  // state.hardware_id = apiGame.game.hardware_id;
+  // state.hardware_name = apiGame.game.hardware_name;
+  state.hardware_list = apiGame.hardware_list;
+  state.friend_list = apiGame.friend_list;
   state.recruitment_list = apiGame.recruitment_list;
+  state.friend_id_list = apiGame.friend_id_list;
 
-  pagenation_data.totalCount = apiGame.page_data.total; // 総記事数
-  pagenation_data.currentPage = apiGame.page_data.current_page; // 現在のページ
-  pagenation_data.totalPages = apiGame.page_data.last_page; // 総ページ
+  // pagenation_data.totalCount = apiGame.page_data.total; // 総記事数
+  // pagenation_data.currentPage = apiGame.page_data.current_page; // 現在のページ
+  // pagenation_data.totalPages = apiGame.page_data.last_page; // 総ページ
 
-  state.is_ps = Boolean(apiGame.game.is_ps);
-  state.is_discord = Boolean(apiGame.game.is_discord);
-  state.is_friend_code = Boolean(apiGame.game.is_friend_code);
-  state.is_origin = Boolean(apiGame.game.is_origin);
-  state.is_skype = Boolean(apiGame.game.is_skype);
-  state.is_steam = Boolean(apiGame.game.is_steam);
+  // state.is_ps = Boolean(apiGame.game.is_ps);
+  // state.is_discord = Boolean(apiGame.game.is_discord);
+  // state.is_friend_code = Boolean(apiGame.game.is_friend_code);
+  // state.is_origin = Boolean(apiGame.game.is_origin);
+  // state.is_skype = Boolean(apiGame.game.is_skype);
+  // state.is_steam = Boolean(apiGame.game.is_steam);
 
-  if (state.hardwares.length) {
-    state.init_hardware_id = state.hardwares[0].hardware_id;
+  // ハードウェアの初期値設定
+  if (state.friend_id_list) {
+    for (const friend_id in state.friend_id_list) {
+      state.init_hardware_id = friend_id as number;
+      break;
+    }
   }
 };
 
@@ -156,7 +166,9 @@ onMounted(() => {
     </h1>
     <!-- 応募フォーム -->
     <RecruitmentForm
-      :hardwares="state.hardwares"
+      :friend_id_list="state.friend_id_list"
+      :friend_list="state.friend_list"
+      :hardware_list="state.hardware_list"
       :is_ps="state.is_ps"
       :is_discord="state.is_discord"
       :is_friend_code="state.is_friend_code"

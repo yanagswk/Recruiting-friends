@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Library\Common;
 use App\Mail\ContactMail;
+use App\Models\FriendMaster;
 use App\Models\GameMaster;
 use App\Models\HardwareMaster;
 use App\Models\PurposeMaster;
@@ -30,7 +31,7 @@ class GameController extends Controller
             ->get()
             ->toArray();
 
-        \Log::debug($game_master);
+        // \Log::debug($game_master);
 
         if (empty($game_master)) {
             return Common::makeNotFoundResponse('game list not found');
@@ -40,7 +41,7 @@ class GameController extends Controller
         foreach ($game_master as $index => $game) {
             $hardware_list = [];
             foreach ($game['hardware_friend'] as $i => $v) {
-                $hardware_list[$v['hardware']['hardware_id']] = $v['hardware']['hardware_name'];
+                $hardware_list[$v['hardware']['id']] = $v['hardware']['hardware_name'];
             }
             $game_list[] = [
                 'id'                => $game['id'],
@@ -55,12 +56,12 @@ class GameController extends Controller
         //     ->get()
         //     ->toArray();
 
-        \Log::debug($game_list);
+        // \Log::debug($game_list);
 
         // ハードウェア一覧取得
-        $hardware_master = HardwareMaster::where('hardware_id', '<>', HardwareMaster::PS4PS5)
+        $hardware_master = HardwareMaster::where('id', '<>', HardwareMaster::PS4PS5)
             ->get()
-            ->pluck("hardware_name", "hardware_id")
+            ->pluck("hardware_name", "id")
             ->toArray();
         if (empty($hardware_master)) {
             $hardware_master = [];
@@ -86,81 +87,93 @@ class GameController extends Controller
             return Common::makeValidationErrorResponse($validation->errors());
         }
 
-        // 指定されたゲーム取得
-        $game = Game::with('hardware:hardware_id,hardware_name')
-            ->where('id', $game_id)
-            ->first()
-            ->toArray();
-        if (empty($game)) {
+        // ゲーム取得
+        $game_master = GameMaster::where('id', $game_id)
+            ->with(['hardwareFriend' => function ($query) {
+                $query->with(['hardware', 'friend']);
+            }])
+            ->first();
+
+        if (empty($game_master)) {
             return Common::makeNotFoundResponse('game not found');
         }
-        // 階層を上げる
-        if (!empty($game['hardware'])) {
-            $game = array_merge($game, $game['hardware']);
-            unset($game['hardware']);
+
+        $game_info = [
+            'id'                => $game_master->id,
+            'game_name'         => $game_master->game_name,
+            'url_name'          => $game_master->url_name,
+            'game_image_url'    => $game_master->game_image_url,
+        ];
+
+        // ハードウェアが持つフレンドidをグループ分けする
+        foreach ($game_master->hardwareFriend as $index => $game) {
+            $hardware_id = $game->hardware()->pluck('id')->first();
+            // $friend_id_list = $game->friend()->pluck('friend_id_name', 'id')->toArray();
+            $friend_id_list = $game->friend()->pluck('id')->first();
+            $game_list[$hardware_id][] = $friend_id_list;
+        }
+        // \Log::debug($game_list);
+
+        // ハードウェア一覧取得 // TODO: 処理被りあり。モデルクラスに持っていく
+        $hardware_master = HardwareMaster::where('id', '<>', HardwareMaster::PS4PS5)
+            ->get()
+            ->pluck("hardware_name", "id")
+            ->toArray();
+        if (empty($hardware_master)) {
+            $hardware_master = [];
         }
 
-        $hardwares = [];
-        if ($game['hardware_id'] === HardwareMaster::PS4PS5) {
-            $hardwares[] = [
-                'hardware_id' => HardwareMaster::PS4,
-                'hardware_name' => 'PS4'
-            ];
-            $hardwares[] = [
-                'hardware_id' => HardwareMaster::PS5,
-                'hardware_name' => 'PS5'
-            ];
-        } else {
-            $hardwares[] = [
-                'hardware_id' => $game['hardware_id'],
-                'hardware_name' => $game['hardware_name']
-            ];
+        // フレンドid一覧取得
+        $friend_master = FriendMaster::pluck("friend_id_name", "id")
+            ->toArray();
+        if (empty($friend_master)) {
+            $friend_master = [];
         }
 
-        // 目的一覧取得
-        // $purpose_list = PurposeMaster::all()->toArray();
+        // exit;
 
         // フレンド募集一覧取得
-        $recruitment_master = Recruitments::with('hardware:hardware_id,hardware_name')
-            ->where('game_id', $request->game_id)
-            ->orderBy('created_at', 'desc')
-            ->active()
-            // ->get()
-            ->paginate(config('game.paginate'))   // TODO: 直す
-            ->toArray();
+        // $recruitment_master = Recruitments::with('hardware:hardware_id,hardware_name')
+        //     ->where('game_id', $request->game_id)
+        //     ->orderBy('created_at', 'desc')
+        //     ->active()
+        //     ->paginate(config('game.paginate'))   // TODO: 直す
+        //     ->toArray();
 
-        $recruitment_list = [];
-        $page_data = [];
-        if (!empty($recruitment_master)) {
-            // TODO: data
-            foreach ($recruitment_master['data'] as $index => $recruitment)
-                $recruitment_list[] = [
-                    'id'    => $recruitment['id'],
-                    'game_id'    => $recruitment['game_id'],
-                    'hardware_id'    => $recruitment['hardware_id'],
-                    'hardware_name'    => (isset($recruitment['hardware']['hardware_name'])) ? $recruitment['hardware']['hardware_name'] : '',
-                    'comment'    => $recruitment['comment'],
-                    'ps_id'    => $recruitment['ps_id'],
-                    'steam_id'    => $recruitment['steam_id'],
-                    'origin_id'    => $recruitment['origin_id'],
-                    'skype_id'    => $recruitment['skype_id'],
-                    'discord_id'    => $recruitment['discord_id'],
-                    'friend_code_id'    => $recruitment['friend_code_id'],
-                    'created_at'    => $this->formatDate($recruitment['created_at']),
-                ];
-            $page_data = [
-                'total' => $recruitment_master["total"],
-                'per_page' => $recruitment_master["per_page"],
-                'current_page' => $recruitment_master["current_page"],
-                'last_page' => $recruitment_master["last_page"]
-            ];
-        }
+        // $recruitment_list = [];
+        // $page_data = [];
+        // if (!empty($recruitment_master)) {
+        //     // TODO: data
+        //     foreach ($recruitment_master['data'] as $index => $recruitment)
+        //         $recruitment_list[] = [
+        //             'id'    => $recruitment['id'],
+        //             'game_id'    => $recruitment['game_id'],
+        //             'hardware_id'    => $recruitment['hardware_id'],
+        //             'hardware_name'    => (isset($recruitment['hardware']['hardware_name'])) ? $recruitment['hardware']['hardware_name'] : '',
+        //             'comment'    => $recruitment['comment'],
+        //             'ps_id'    => $recruitment['ps_id'],
+        //             'steam_id'    => $recruitment['steam_id'],
+        //             'origin_id'    => $recruitment['origin_id'],
+        //             'skype_id'    => $recruitment['skype_id'],
+        //             'discord_id'    => $recruitment['discord_id'],
+        //             'friend_code_id'    => $recruitment['friend_code_id'],
+        //             'created_at'    => $this->formatDate($recruitment['created_at']),
+        //         ];
+        //     $page_data = [
+        //         'total' => $recruitment_master["total"],
+        //         'per_page' => $recruitment_master["per_page"],
+        //         'current_page' => $recruitment_master["current_page"],
+        //         'last_page' => $recruitment_master["last_page"]
+        //     ];
+        // }
 
         return Common::makeResponse([
-            'game'      => $game,
-            'hardwares'  => $hardwares,
-            'recruitment_list' => $recruitment_list,
-            'page_data' => $page_data
+            'game'              => $game_info,
+            'hardware_list'     => $hardware_master,
+            'friend_list'       => $friend_master,
+            'friend_id_list'    => $game_list,
+            // 'recruitment_list' => $recruitment_list,
+            // 'page_data' => $page_data
         ]);
     }
 

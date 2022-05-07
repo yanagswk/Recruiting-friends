@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('hardware_master', function (Blueprint $table) {
+        Schema::create('game_friend', function (Blueprint $table) {
             $table->id();
-            $table->string('hardware_name');
-            $table->string('hardware_image_url')->nullable();
+            $table->integer('game_id');
+            $table->integer('friend_id');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hardware_master');
+        Schema::dropIfExists('game_friend');
     }
 };
