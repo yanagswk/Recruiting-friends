@@ -110,7 +110,6 @@ class GameController extends Controller
         // ハードウェアが持つフレンドidをグループ分けする
         foreach ($game_master->hardwareFriend as $index => $game) {
             $hardware_id = $game->hardware()->pluck('id')->first();
-            // $friend_id_list = $game->friend()->pluck('friend_id_name', 'id')->toArray();
             $friend_id_list = $game->friend()->pluck('id')->first();
             $game_list[$hardware_id][] = $friend_id_list;
         }
@@ -195,7 +194,6 @@ class GameController extends Controller
             'discord_id'        => 'nullable|string',
             'friend_code_id'    => 'nullable|string',
         ]);
-        \Log::debug($request->all());
         if ($validation->fails()) {
             return Common::makeValidationErrorResponse($validation->errors());
         }
@@ -204,25 +202,26 @@ class GameController extends Controller
             DB::transaction(function ()  use ($request) {
                 $friend_list = $request->only('ps_id', 'steam_id', 'friend_code_id', 'origin_id', 'skype_id', 'discord_id');
 
+                $user_recruitment = new UserRecruitment();
+                $user_recruitment->fill([
+                    'game_id'   => $request->game_id,
+                    'comment'   => $request->comment
+                ])->save();
+
+                $last_data = UserRecruitment::orderBy('created_at', 'desc')->first();
                 foreach ($friend_list as $index => $friend) {
                     if (is_null($friend)) {
                         continue;
                     }
                     $friend_id = FriendMaster::where('friend_id_name', $index)->value('id');
                     $data = [
-                        'game_id'               => $request->game_id,
+                        'recruitment_id'        => $last_data->id,
                         'hardware_id'           => (int)$request->hardware_id,
                         'hardware_friend_id'    => $friend_id,
                         'friend_name'           => $friend_list[$index]
                     ];
+                    UserFriendName::create($data);
                 }
-                UserFriendName::insert($data);
-
-                $user_recruitment = new UserRecruitment();
-                $user_recruitment->fill([
-                    'game_id'   => $request->game_id,
-                    'comment'   => $request->comment
-                ])->save();
             });
         } catch (\Exception $error) {
             return Common::makeNotFoundResponse($error);

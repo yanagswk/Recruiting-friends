@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('user_friend_name', function (Blueprint $table) {
             $table->id();
-            $table->integer('game_id');
+            $table->integer('recruitment_id');
             $table->integer('hardware_id');
             $table->integer('hardware_friend_id');
             $table->string('friend_name');

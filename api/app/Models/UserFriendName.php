@@ -12,7 +12,9 @@ class UserFriendName extends Model
     protected $table = 'user_friend_name';
 
     protected $fillable = [
-        'game_id',
+        // 'game_id',
+        'recruitment_id',
+        'hardware_id',
         'hardware_friend_id',
         'friend_name',
         'created_at',

@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('user_recruitment', function (Blueprint $table) {
             $table->id();
             $table->integer('game_id');
-            // $table->integer('hardware_id');
             $table->text('comment');
             $table->boolean('is_invalid')->default(0);
             $table->timestamps();
