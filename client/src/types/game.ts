@@ -44,13 +44,12 @@ export interface RecruitmentList {
   hardware_id: number;
   hardware_name: string;
   comment: number;
-  ps_id: string;
-  steam_id: string;
-  origin_id: string;
-  skype_id: string;
-  discord_id: string;
-  friend_code_id: string;
   created_at: string;
+  friend_name_list: {
+    hardware_friend_id: number;
+    friend_id_name: string;
+    friend_name: string;
+  }[];
 }
 export interface FriendIdList {
   [key: number]: {

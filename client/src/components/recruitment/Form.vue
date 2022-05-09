@@ -19,7 +19,7 @@ const store = useStore();
 
 interface Props {
   hardware_list: Hardware[];
-  friend_list: Friend[];
+  friend_list: Friend;
   friend_id_list: FriendIdList;
   is_ps: boolean;
   is_steam: boolean;
@@ -229,8 +229,8 @@ const changeHardwareId = (e: Event) => {
         </button>
         <ConfirmModal
           :is_display="is_display"
-          @hideModal="modalConfirm"
           :message="CONFIRM"
+          @hideModal="modalConfirm"
         />
       </div>
     </form>

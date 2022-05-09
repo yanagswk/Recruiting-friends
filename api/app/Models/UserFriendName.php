@@ -20,4 +20,9 @@ class UserFriendName extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function friend()
+    {
+        return $this->hasOne(FriendMaster::class, 'id', 'hardware_friend_id');
+    }
 }

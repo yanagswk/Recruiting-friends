@@ -82,8 +82,9 @@ class GameController extends Controller
     {
         $game_id = $request->input('game_id');
         $validation = Validator::make($request->all(), [
-            'game_id'   => 'required|integer',
-            'page'      => 'nullable|integer',
+            'game_id'       => 'required|integer',
+            'page'          => 'nullable|integer',
+            'hardware_id'   => 'nullable|integer',
         ]);
         if ($validation->fails()) {
             return Common::makeValidationErrorResponse($validation->errors());
@@ -113,7 +114,6 @@ class GameController extends Controller
             $friend_id_list = $game->friend()->pluck('id')->first();
             $game_list[$hardware_id][] = $friend_id_list;
         }
-        // \Log::debug($game_list);
 
         // ハードウェア一覧取得 // TODO: 処理被りあり。モデルクラスに持っていく
         $hardware_master = HardwareMaster::where('id', '<>', HardwareMaster::PS4PS5)
@@ -134,47 +134,61 @@ class GameController extends Controller
         // exit;
 
         // フレンド募集一覧取得
-        // $recruitment_master = Recruitments::with('hardware:hardware_id,hardware_name')
-        //     ->where('game_id', $request->game_id)
-        //     ->orderBy('created_at', 'desc')
-        //     ->active()
-        //     ->paginate(config('game.paginate'))   // TODO: 直す
-        //     ->toArray();
+        $hardware_id = $request->hardware_id ?? 1;
+        $recruitment_master = userRecruitment::where([
+                ['game_id', $game_id],
+                ['hardware_id', $hardware_id]
+            ])
+            ->with(['friendName' => function ($query) {
+                $query->with(['friend:id,friend_id_name']);
+            }])
+            ->with(['hardware:id,hardware_name'])
+            ->orderBy('created_at', 'desc')
+            // ->paginate(config('game.paginate'));
+            ->get();
 
-        // $recruitment_list = [];
-        // $page_data = [];
-        // if (!empty($recruitment_master)) {
-        //     // TODO: data
-        //     foreach ($recruitment_master['data'] as $index => $recruitment)
-        //         $recruitment_list[] = [
-        //             'id'    => $recruitment['id'],
-        //             'game_id'    => $recruitment['game_id'],
-        //             'hardware_id'    => $recruitment['hardware_id'],
-        //             'hardware_name'    => (isset($recruitment['hardware']['hardware_name'])) ? $recruitment['hardware']['hardware_name'] : '',
-        //             'comment'    => $recruitment['comment'],
-        //             'ps_id'    => $recruitment['ps_id'],
-        //             'steam_id'    => $recruitment['steam_id'],
-        //             'origin_id'    => $recruitment['origin_id'],
-        //             'skype_id'    => $recruitment['skype_id'],
-        //             'discord_id'    => $recruitment['discord_id'],
-        //             'friend_code_id'    => $recruitment['friend_code_id'],
-        //             'created_at'    => $this->formatDate($recruitment['created_at']),
-        //         ];
-        //     $page_data = [
-        //         'total' => $recruitment_master["total"],
-        //         'per_page' => $recruitment_master["per_page"],
-        //         'current_page' => $recruitment_master["current_page"],
-        //         'last_page' => $recruitment_master["last_page"]
-        //     ];
-        // }
+        $recruitment_list = [];
+        // \Log::debug($recruitment_master);
+        // $recruitment_data = $recruitment_master->['data'];
+
+        // \Log::debug($recruitment_master->total);
+        
+        foreach ($recruitment_master as $recruitment) {
+
+            $friend_name_list = [];
+            foreach ($recruitment->friendName as $friend) {
+                $friend_name_list[] = [
+                    'hardware_friend_id'    => $friend->hardware_friend_id,
+                    'friend_id_name'        => $friend->friend->friend_id_name,
+                    'friend_name'           => $friend->friend_name
+                ];
+            }
+            $recruitment_list[] = [
+                'id'                => $recruitment->id,
+                'game_id'           => $recruitment->game_id,
+                'hardware_id'       => $recruitment->hardware_id,
+                'hardware_name'     => $recruitment->hardware->hardware_name,
+                'comment'           => $recruitment->comment,
+                'created_at'        => $this->formatDate($recruitment->created_at),
+                'friend_name_list'  => $friend_name_list
+            ]; 
+        }
+
+        // $page_list = $recruitment_master->toArray();
+        // $page_data = [
+        //     'total' => $page_list["total"],
+        //     'per_page' => $page_list["per_page"],
+        //     'current_page' => $page_list["current_page"],
+        //     'last_page' => $page_list["last_page"]
+        // ];
 
         return Common::makeResponse([
             'game'              => $game_info,
             'hardware_list'     => $hardware_master,
             'friend_list'       => $friend_master,
             'friend_id_list'    => $game_list,
-            // 'recruitment_list' => $recruitment_list,
-            // 'page_data' => $page_data
+            'recruitment_list'  => $recruitment_list,
+            // 'page_data'         => $page_data
         ]);
     }
 
@@ -204,8 +218,9 @@ class GameController extends Controller
 
                 $user_recruitment = new UserRecruitment();
                 $user_recruitment->fill([
-                    'game_id'   => $request->game_id,
-                    'comment'   => $request->comment
+                    'game_id'       => $request->game_id,
+                    'hardware_id'   => (int)$request->hardware_id,
+                    'comment'       => $request->comment
                 ])->save();
 
                 $last_data = UserRecruitment::orderBy('created_at', 'desc')->first();

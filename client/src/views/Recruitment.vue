@@ -12,6 +12,7 @@ import {
 import RecruitmentForm from "@/components/recruitment/Form.vue";
 import UserList from "@/components/recruitment/UserList.vue";
 import Pagenation from "@/components/common/Pagenation.vue";
+import HardwareTab from "@/components/recruitment/HardwareTab.vue";
 import { useStore } from "@/store/index";
 import * as MutationTypes from "@/store/mutationType";
 import { SUCCESS_MSG } from "@/store/common";
@@ -42,13 +43,14 @@ const state = reactive({
   game_image_url: "",
   hardware_id: 0,
   hardware_name: "",
-  hardware_list: [] as Hardware[],
+  hardware_list: {} as Hardware,
   friend_list: [] as Friend[],
   purpose_list: [] as PurposeList[],
   recruitment_list: [] as RecruitmentList[],
   friend_id_list: [] as FriendIdList[],
   comment: "",
   init_hardware_id: 0,
+  init_hardware_id2: 0,
   select_purpose_id: 0,
   is_ps: false,
   is_discord: false,
@@ -56,6 +58,7 @@ const state = reactive({
   is_origin: false,
   is_skype: false,
   is_steam: false,
+  // init_hardware
 });
 
 /**
@@ -92,7 +95,16 @@ const recruitmentSubmit = async (
  */
 const getCurrentPage = (currentPage: number) => {
   pagenation_data.currentPage = currentPage;
-  apiGetGame();
+  apiGetGame(state.init_hardware_id2);
+};
+
+/**
+ * ハードウェア変更して、api呼び出し
+ */
+const changeHardware = (hardware_id: number) => {
+  pagenation_data.currentPage = 1;
+  state.init_hardware_id2 = hardware_id;
+  apiGetGame(hardware_id);
 };
 
 const api_flag = ref(false);
@@ -100,10 +112,11 @@ const api_flag = ref(false);
 /**
  * ゲーム情報取得api
  */
-const apiGetGame = async () => {
+const apiGetGame = async (hardware_id?: number) => {
   const apiGame = await getGame(
     Number(route.params.id),
-    pagenation_data.currentPage
+    pagenation_data.currentPage,
+    hardware_id ?? ""
   );
   api_flag.value = true;
   state.game_id = apiGame.game.id;
@@ -115,6 +128,12 @@ const apiGetGame = async () => {
   state.friend_list = apiGame.friend_list;
   state.recruitment_list = apiGame.recruitment_list;
   state.friend_id_list = apiGame.friend_id_list;
+
+  console.log(state.recruitment_list);
+
+  // if (state.recruitment_list.length) {
+  //    = state.recruitment_list[0]['hardware_id']
+  // }
 
   // pagenation_data.totalCount = apiGame.page_data.total; // 総記事数
   // pagenation_data.currentPage = apiGame.page_data.current_page; // 現在のページ
@@ -130,7 +149,12 @@ const apiGetGame = async () => {
   // ハードウェアの初期値設定
   if (state.friend_id_list) {
     for (const friend_id in state.friend_id_list) {
-      state.init_hardware_id = friend_id as number;
+      if (!state.init_hardware_id) {
+        state.init_hardware_id = friend_id as number;
+      }
+      if (!state.init_hardware_id2) {
+        state.init_hardware_id2 = friend_id as number;
+      }
       break;
     }
   }
@@ -162,7 +186,8 @@ onMounted(() => {
     <h1
       class="text-gray-800 text-2xl sm:text-3xl font-bold text-center mb-4 md:mb-6"
     >
-      ({{ state.hardware_name }}) {{ state.game_name }}用 募集掲示板
+      <!-- ({{ state.hardware_name }}) {{ state.game_name }}用 募集掲示板 -->
+      {{ state.game_name }}用 募集掲示板
     </h1>
     <!-- 応募フォーム -->
     <RecruitmentForm
@@ -178,15 +203,29 @@ onMounted(() => {
       @recruitment="recruitmentSubmit"
       v-model:selectHardwareId="state.init_hardware_id"
     />
+    <!-- ハードウェアタブ -->
+    <HardwareTab
+      :friendIdList="state.friend_id_list"
+      :init_hardware_id2="state.init_hardware_id2"
+      :hardware_list="state.hardware_list"
+      @change="changeHardware"
+    />
     <!-- ページネーション -->
-    <Pagenation
+    <!-- <Pagenation
       :showPages="pagenation_data.showPages"
       :currentPage="pagenation_data.currentPage"
       :totalCount="pagenation_data.totalCount"
       :totalPages="pagenation_data.totalPages"
       @currentPage="getCurrentPage"
-    />
+    /> -->
     <!-- ユーザー情報 -->
-    <UserList :recruitmentList="state.recruitment_list" />
+    <UserList
+      :recruitmentList="state.recruitment_list"
+      :friendIdList="state.friend_id_list"
+      :friendList="state.friend_list"
+      :hardware_list="state.hardware_list"
+      :init_hardware_id2="state.init_hardware_id2"
+      @change="changeHardware"
+    />
   </div>
 </template>

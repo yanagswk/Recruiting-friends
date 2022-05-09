@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 import { getGameList } from "@/api/game";
 import { GameList } from "@/types/game";
-import { hardwareColor } from "@/store/common";
+import { hardwareBcColor } from "@/store/common";
 
 // const gameList = ref<GameList[]>([]);
 
@@ -50,7 +50,7 @@ defineProps<{
           <template v-for="(hardware, i) in game.hardware_list" :key="i">
             <span
               class="mr-1 px-2 py-1 rounded-md text-white"
-              :class="hardwareColor[i]"
+              :class="hardwareBcColor[i]"
               >{{ hardware }}</span
             >
           </template>

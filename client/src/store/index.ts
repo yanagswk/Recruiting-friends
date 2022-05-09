@@ -15,6 +15,7 @@ interface FlashMsg {
 interface State {
   is_loading: boolean;
   flash_msg: FlashMsg;
+  currentPageEdited: number;
 }
 
 // storeをprovide/injectするためのキー
@@ -31,6 +32,7 @@ export const store = createStore<State>({
       text_color: "",
       image_path: "",
     },
+    currentPageEdited: 1,
   },
   mutations: {
     [MutationTypes.IS_LOADING](state, is_loading: boolean) {
@@ -62,6 +64,12 @@ export const store = createStore<State>({
       state.flash_msg.is_display = false;
       // state.flash_msg.message = "";
       // state.flash_msg.color = "";
+    },
+    [MutationTypes.INIT_PAGE](state) {
+      state.currentPageEdited = 1;
+    },
+    [MutationTypes.SET_PAGENATION](state, page: number) {
+      state.currentPageEdited = page;
     },
   },
 });

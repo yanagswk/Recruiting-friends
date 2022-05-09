@@ -32,6 +32,11 @@ class GameMaster extends Model
         return $this->hasMany(HardwareFriendMaster::class, 'game_id', 'id');
     }
 
+    public function userRecruitment()
+    {
+        return $this->hasOne(userRecruitment::class, 'game_id', 'id');
+    }
+
     /**
      * リレーション先 hardware_master取得
      * 中間テーブル game_hardware

@@ -13,6 +13,7 @@ class UserRecruitment extends Model
 
     protected $fillable = [
         'game_id',
+        'hardware_id',
         'comment',
         'is_invalid',
         'created_at',
@@ -21,7 +22,12 @@ class UserRecruitment extends Model
 
     public function hardware()
     {
-        return $this->hasOne(HardwareMaster::class, 'hardware_id', 'hardware_id');
+        return $this->hasOne(HardwareMaster::class, 'id', 'hardware_id');
+    }
+
+    public function friendName()
+    {
+        return $this->hasMany(UserFriendName::class, 'recruitment_id', 'id');
     }
 
     /**

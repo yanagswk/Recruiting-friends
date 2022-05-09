@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref, watchEffect, computed } from "vue";
+import { useStore } from "@/store/index";
+import * as MutationTypes from "@/store/mutationType";
+
+const store = useStore();
 
 const currentPageEdited = ref(1);
+// const currentPageEdited = store.state.currentPageEdited;
 
 const props = defineProps<{
   showPages: number; //ページネーションを何件表示するか
@@ -77,6 +82,7 @@ watchEffect(() => {
 
 <template>
   <div class="flex mt-10" v-if="totalPages">
+    <!-- 一番初めに戻る -->
     <a
       href="#"
       class="flex items-center justify-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-200 transform bg-gray-200 rounded-md hover:bg-blue-500 hover:text-white"
@@ -96,6 +102,7 @@ watchEffect(() => {
         />
       </svg>
     </a>
+    <!-- 前に戻る -->
     <a
       href="#"
       class="flex items-center justify-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-200 transform bg-gray-200 rounded-md hover:bg-blue-500 hover:text-white"
@@ -152,6 +159,7 @@ watchEffect(() => {
         />
       </svg>
     </a>
+    <!-- 一番最後のページ -->
     <a
       href="#"
       class="flex items-center justify-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-200 transform bg-gray-200 rounded-md hover:bg-blue-500 hover:text-white"
