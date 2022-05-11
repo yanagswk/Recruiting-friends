@@ -15,6 +15,7 @@ export const hardwareBcColor = {
   5: "bg-green-500", // XboxOne
   6: "bg-yellow-500", // PC
 };
+export type ColorBcNumber = keyof typeof hardwareBcColor;
 
 export const hardwareTextColor = {
   1: "text-blue-500", // PS4
@@ -23,6 +24,7 @@ export const hardwareTextColor = {
   5: "text-green-500", // XboxOne
   6: "text-yellow-500", // PC
 };
+export type ColorTextNumber = keyof typeof hardwareTextColor;
 
 export const FRIENDID = {
   PSID: 1,

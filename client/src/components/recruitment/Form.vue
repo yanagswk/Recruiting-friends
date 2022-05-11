@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref } from "vue";
 import { Hardware, FriendIdList, Friend } from "@/types/game";
 import { useStore } from "@/store/index";
 import * as MutationTypes from "@/store/mutationType";
@@ -17,27 +17,12 @@ const comment = ref("");
 
 const store = useStore();
 
-interface Props {
-  hardware_list: Hardware[];
-  friend_list: Friend;
-  friend_id_list: FriendIdList;
-  is_ps: boolean;
-  is_steam: boolean;
-  is_origin: boolean;
-  is_skype: boolean;
-  is_discord: boolean;
-  is_friend_code: boolean;
+defineProps<{
+  hardwareList: Hardware;
+  friendList: Friend;
+  friendIdList: FriendIdList;
   selectHardwareId: number;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  is_ps: false,
-  is_steam: false,
-  is_origin: false,
-  is_skype: false,
-  is_discord: false,
-  is_friend_code: false,
-});
+}>();
 
 const emit = defineEmits<{
   (
@@ -67,13 +52,13 @@ const recruitmentSubmit = (): boolean | void => {
 };
 
 // モーダル用
-const is_display = ref(false);
+const isDisplay = ref(false);
 
 /**
  * モーダルOKの場合は募集送信
  */
 const modalConfirm = (is_result: boolean) => {
-  is_display.value = false;
+  isDisplay.value = false;
   if (is_result) {
     recruitmentSubmit();
   }
@@ -98,7 +83,7 @@ const showModal = () => {
     store.commit(MutationTypes.ERR_FLASH_MSG, COMMENT_ERR);
     return false;
   }
-  is_display.value = true;
+  isDisplay.value = true;
 };
 
 /**
@@ -121,22 +106,22 @@ const changeHardwareId = (e: Event) => {
         <div class="mb-3">
           <div class="text-sm text-gray-700 block mb-1 font-medium">機種</div>
           <select
-            v-on:change="changeHardwareId"
-            :value="selectHardwareId"
             class="block appearance-none w-6/12 bg-white border border-gray-200 text-gray-700 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            :value="selectHardwareId"
+            @change="changeHardwareId"
           >
             <option
-              v-for="(hardware, index) in friend_id_list"
+              v-for="(hardware, index) in friendIdList"
               :key="index"
               :value="index"
             >
-              {{ hardware_list[index] }}
+              {{ hardwareList[index] }}
             </option>
           </select>
         </div>
 
         <template
-          v-for="(friend_id, index) in friend_id_list[selectHardwareId]"
+          v-for="(friend_id, index) in friendIdList[selectHardwareId]"
           :key="index"
         >
           <div v-if="friend_id == FRIENDID.PSID" class="mb-3">
@@ -221,16 +206,16 @@ const changeHardwareId = (e: Event) => {
       <div class="mt-8">
         <!-- type="submit" -->
         <button
-          @click="showModal()"
-          type="button"
           class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 active:bg-blue-700 disabled:opacity-50"
+          type="button"
+          @click="showModal()"
         >
           募集する
         </button>
         <ConfirmModal
-          :is_display="is_display"
+          :is-display="isDisplay"
           :message="CONFIRM"
-          @hideModal="modalConfirm"
+          @hide-modal="modalConfirm"
         />
       </div>
     </form>

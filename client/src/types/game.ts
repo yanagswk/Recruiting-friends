@@ -1,9 +1,18 @@
-export interface GameList {
+import { ColorTextNumber } from "@/store/common";
+export type GameList = {
   id: number;
   game_name: string;
   game_image_url?: string;
-  hardware_list: string[];
-}
+  hardware_list: {
+    [key in ColorTextNumber]?: string;
+  };
+};
+// export interface GameList {
+//   id: number;
+//   game_name: string;
+//   game_image_url?: string;
+//   hardware_list: string[];
+// }
 
 export interface RecruitmentPage {
   game_id: number;
@@ -27,12 +36,14 @@ export interface RecruitmentPage {
 
 // TODO: Hardware.Friend被り　拡張interface作る
 export interface Hardware {
-  hardware_id: number;
-  hardware_name: string;
+  // hardware_id: number;
+  // hardware_name: string;
+  [key: number]: string;
 }
 export interface Friend {
-  hardware_id: number;
-  hardware_name: string;
+  // hardware_id: number;
+  // hardware_name: string;
+  [key: number]: string;
 }
 export interface PurposeList {
   purpose_id: number;
@@ -51,8 +62,14 @@ export interface RecruitmentList {
     friend_name: string;
   }[];
 }
-export interface FriendIdList {
-  [key: number]: {
-    [key: number]: string;
-  }[];
-}
+
+import { ColorBcNumber } from "@/store/common";
+export type FriendIdList = {
+  [key in ColorBcNumber]: string[];
+};
+
+// export interface FriendIdList {
+// [key: number]: {
+//   [key: number]: string;
+// }[];
+// }

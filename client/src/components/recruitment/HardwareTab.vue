@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { RecruitmentList, FriendIdList, Friend, Hardware } from "@/types/game";
-import { hardwareBcColor, hardwareTextColor, FRIENDID } from "@/store/common";
+import { FriendIdList, Hardware } from "@/types/game";
+import { hardwareBcColor, hardwareTextColor } from "@/store/common";
 
 const emit = defineEmits<{
   (event: "change", hardware_id: number): void;
@@ -12,8 +12,8 @@ const changeHardware = (hardware_id: number) => {
 
 defineProps<{
   friendIdList: FriendIdList;
-  hardware_list: Hardware;
-  init_hardware_id2: number;
+  hardwareList: Hardware;
+  initHardwareId2: number;
 }>();
 </script>
 
@@ -21,12 +21,12 @@ defineProps<{
   <div class="grid grid-cols-5 gap-5 mt-5">
     <template v-for="(friend, index) in friendIdList" :key="index">
       <button
-        v-if="init_hardware_id2 == index"
+        v-if="initHardwareId2 == index"
         class="text-white p-3 rounded shadow-md font-medium"
         :class="hardwareBcColor[index]"
         @click="changeHardware(index)"
       >
-        {{ hardware_list[index] }}
+        {{ hardwareList[index] }}
       </button>
       <button
         v-else
@@ -34,7 +34,7 @@ defineProps<{
         :class="hardwareTextColor[index]"
         @click="changeHardware(index)"
       >
-        {{ hardware_list[index] }}
+        {{ hardwareList[index] }}
       </button>
     </template>
   </div>

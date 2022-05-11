@@ -5,17 +5,16 @@ import { useStore } from "@/store/index";
 import * as MutationTypes from "@/store/mutationType";
 import { SUCCESS_MSG, GAME_NAME_ERR, CONFIRM } from "@/store/common";
 import ConfirmModal from "@/components/modal/ConfirmModal.vue";
+import { Hardware } from "@/types/game";
 
-const game_name = ref("");
-const select_hardware_id = ref([]);
-const user_message = ref("");
+const gameName = ref("");
+const selectHardwareId = ref([]);
+const userMessage = ref("");
 
 const store = useStore();
 
 defineProps<{
-  hardwareList: {
-    [key: string]: string;
-  };
+  hardwareList: Hardware;
 }>();
 
 const emit = defineEmits<{
@@ -23,11 +22,11 @@ const emit = defineEmits<{
 }>();
 
 const resetHardwareId = () => {
-  select_hardware_id.value = [];
+  selectHardwareId.value = [];
 };
 
 const validation = () => {
-  if (!game_name.value) {
+  if (!gameName.value) {
     return false;
   }
   return true;
@@ -38,13 +37,13 @@ const validation = () => {
  */
 const requestAddGameMail = async () => {
   store.commit(MutationTypes.IS_LOADING, true);
-  const active_hardware_id = select_hardware_id.value.filter((id) => {
+  const activeHardwareId = selectHardwareId.value.filter((id) => {
     return id !== null || id !== undefined;
   });
   await postRequestAddGameMail(
-    game_name.value,
-    active_hardware_id,
-    user_message.value
+    gameName.value,
+    activeHardwareId,
+    userMessage.value
   );
   store.commit(MutationTypes.IS_LOADING, false);
   emit("close");
@@ -52,7 +51,7 @@ const requestAddGameMail = async () => {
 };
 
 // モーダル用
-const is_display = ref(false);
+const isDisplay = ref(false);
 
 /**
  * モーダル表示
@@ -62,14 +61,14 @@ const showModal = () => {
     store.commit(MutationTypes.ERR_FLASH_MSG, GAME_NAME_ERR);
     return false;
   }
-  is_display.value = true;
+  isDisplay.value = true;
 };
 
 /**
  * モーダルOKの場合api叩く
  */
 const modalConfirm = (is_result: boolean) => {
-  is_display.value = false;
+  isDisplay.value = false;
   if (is_result) {
     requestAddGameMail();
   }
@@ -87,7 +86,7 @@ const modalConfirm = (is_result: boolean) => {
         <h3 class="font-semibold text-lg">
           追加してほしいゲーム情報を入力してください
         </h3>
-        <button @click="emit('close')" class="hover:bg-gray-300 p-1 rounded-md">
+        <button class="hover:bg-gray-300 p-1 rounded-md" @click="emit('close')">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5"
@@ -107,8 +106,8 @@ const modalConfirm = (is_result: boolean) => {
         <div class="mb-3">
           <h3 class="font-bold">ゲーム名</h3>
           <input
+            v-model="gameName"
             type="text"
-            v-model="game_name"
             class="w-full"
             placeholder="ゲーム名"
           />
@@ -121,16 +120,16 @@ const modalConfirm = (is_result: boolean) => {
             class="list-none"
           >
             <input
-              type="radio"
               :id="key"
+              v-model="selectHardwareId[index]"
+              type="radio"
               :value="key"
-              v-model="select_hardware_id[index]"
             />
             <label :for="key">{{ hardware }}</label>
           </li>
           <button
-            @click="resetHardwareId"
             class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-white mt-2"
+            @click="resetHardwareId"
           >
             クリア
           </button>
@@ -138,7 +137,7 @@ const modalConfirm = (is_result: boolean) => {
         <div class="mb-3">
           <h3 class="font-bold">管理者へのメッセージ</h3>
           <textarea
-            v-model="user_message"
+            v-model="userMessage"
             placeholder="管理者へのメッセージ"
             class="w-full h-25"
           ></textarea>
@@ -156,15 +155,15 @@ const modalConfirm = (is_result: boolean) => {
           OK
         </button>
         <button
-          @click="emit('close')"
           class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
+          @click="emit('close')"
         >
           Cancel
         </button>
         <ConfirmModal
-          :is_display="is_display"
-          @hideModal="modalConfirm"
+          :is-display="isDisplay"
           :message="CONFIRM"
+          @hide-modal="modalConfirm"
         />
       </div>
     </div>

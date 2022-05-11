@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import DashBoard from "@/views/DashBoard.vue";
 import Recruitment from "@/views/Recruitment.vue";
 import NotFound from "@/views/NotFound.vue";
-import gsap from "gsap";
+// import gsap from "gsap";
 
 const routes: Array<RouteRecordRaw> = [
   {

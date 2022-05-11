@@ -1,11 +1,11 @@
 <script setup lang="ts">
 interface Props {
-  is_display: boolean;
+  isDisplay: boolean;
   message: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  is_display: false,
+  isDisplay: false,
   message: "",
 });
 
@@ -18,7 +18,7 @@ const emit = defineEmits<{
   <teleport to="#teleport-target">
     <!-- 以下要素がid="teleport-target"内に描画される -->
     <div
-      v-if="props.is_display"
+      v-if="props.isDisplay"
       id="popup-modal"
       tabindex="-1"
       class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-30 z-20"
@@ -29,10 +29,10 @@ const emit = defineEmits<{
           <!-- Modal header -->
           <div class="flex justify-end p-2">
             <button
-              @click="emit('hideModal', false)"
-              type="button"
               class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+              type="button"
               data-modal-toggle="popup-modal"
+              @click="emit('hideModal', false)"
             >
               <svg
                 class="w-5 h-5"
@@ -70,18 +70,18 @@ const emit = defineEmits<{
               {{ props.message }}
             </h3>
             <button
-              @click="emit('hideModal', true)"
-              data-modal-toggle="popup-modal"
-              type="button"
               class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white mr-3"
+              type="button"
+              data-modal-toggle="popup-modal"
+              @click="emit('hideModal', true)"
             >
               OK
             </button>
             <button
-              @click="emit('hideModal', false)"
+              class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
               data-modal-toggle="popup-modal"
               type="button"
-              class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
+              @click="emit('hideModal', false)"
             >
               Cancel
             </button>

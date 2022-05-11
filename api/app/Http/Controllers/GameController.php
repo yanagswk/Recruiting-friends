@@ -131,10 +131,10 @@ class GameController extends Controller
             $friend_master = [];
         }
 
-        // exit;
+        $min_hardware_friend = HardwareFriendMaster::where('game_id', $game_id)->min('hardware_id');
 
         // フレンド募集一覧取得
-        $hardware_id = $request->hardware_id ?? 1;
+        $hardware_id = $request->hardware_id ?? $min_hardware_friend ?? 0;
         $recruitment_master = userRecruitment::where([
                 ['game_id', $game_id],
                 ['hardware_id', $hardware_id]
@@ -148,13 +148,7 @@ class GameController extends Controller
             ->get();
 
         $recruitment_list = [];
-        // \Log::debug($recruitment_master);
-        // $recruitment_data = $recruitment_master->['data'];
-
-        // \Log::debug($recruitment_master->total);
-        
         foreach ($recruitment_master as $recruitment) {
-
             $friend_name_list = [];
             foreach ($recruitment->friendName as $friend) {
                 $friend_name_list[] = [
@@ -268,7 +262,7 @@ class GameController extends Controller
 
         $hardware = [];
         if (!empty($hardware_id_list)) {
-            $hardware = HardwareMaster::whereIn("hardware_id", $hardware_id_list)
+            $hardware = HardwareMaster::whereIn("id", $hardware_id_list)
                 ->pluck("hardware_name");
             if ($hardware->isEmpty()) {
                 return Common::makeNotFoundResponse('hardware not found');

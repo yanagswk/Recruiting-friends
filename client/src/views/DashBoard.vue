@@ -3,7 +3,7 @@ import { ref } from "vue";
 import Search from "@/components/form/Search.vue";
 import GameList from "@/components/GameList.vue";
 import { getGameList } from "../api/game";
-import { GameList as GameListType } from "../types/game";
+import { GameList as GameListType, Hardware } from "../types/game";
 import RequestGameModal from "@/components/modal/RequestGameModal.vue";
 
 const isModal = ref(false);
@@ -16,7 +16,7 @@ const closeModal = () => {
 };
 
 const gameList = ref<GameListType[]>([]);
-const hardwareList = ref<{ [key: string]: string }>();
+const hardwareList = ref<Hardware>({});
 
 /**
  * ゲーム一覧取得api
@@ -49,13 +49,13 @@ apiGetGameList();
     <transition name="fade">
       <RequestGameModal
         v-if="isModal"
+        :hardware-list="hardwareList"
         @close="closeModal"
-        :hardwareList="hardwareList"
       />
     </transition>
     <Search />
   </div>
-  <GameList :gameList="gameList" />
+  <GameList :game-list="gameList" />
 </template>
 
 <style scoped>

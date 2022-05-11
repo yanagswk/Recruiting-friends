@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { RecruitmentList, FriendIdList, Friend, Hardware } from "@/types/game";
-import { hardwareBcColor, hardwareTextColor, FRIENDID } from "@/store/common";
+import { hardwareBcColor, FRIENDID } from "@/store/common";
 
 defineProps<{
   recruitmentList: RecruitmentList[];
   friendIdList: FriendIdList;
   friendList: Friend;
-  hardware_list: Hardware;
-  init_hardware_id2: number;
+  hardwareList: Hardware;
+  initHardwareId2: number;
 }>();
 
 // const emit = defineEmits<{

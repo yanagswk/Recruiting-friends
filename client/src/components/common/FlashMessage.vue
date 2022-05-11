@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
 import { useStore } from "@/store/index";
 import * as MutationTypes from "@/store/mutationType";
 
@@ -49,8 +48,8 @@ const delFlashMsg = () => {
 
       <div class="ml-auto my-auto pr-2">
         <button
-          @click="delFlashMsg"
           class="p-1 transition-colors duration-200 transform rounded-md hover:bg-opacity-25 hover:bg-gray-600 focus:outline-none"
+          @click="delFlashMsg"
         >
           <svg
             class="w-5 h-5"

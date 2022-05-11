@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { getGameList } from "@/api/game";
+// import { onMounted, ref } from "vue";
+// import { getGameList } from "@/api/game";
 import { GameList } from "@/types/game";
 import { hardwareBcColor } from "@/store/common";
 
