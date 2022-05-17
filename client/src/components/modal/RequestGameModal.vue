@@ -6,6 +6,7 @@ import * as MutationTypes from "@/store/mutationType";
 import { SUCCESS_MSG, GAME_NAME_ERR, CONFIRM } from "@/store/common";
 import ConfirmModal from "@/components/modal/ConfirmModal.vue";
 import { Hardware } from "@/types/game";
+import { XIcon } from "@heroicons/vue/outline";
 
 const gameName = ref("");
 const selectHardwareId = ref([]);
@@ -87,18 +88,7 @@ const modalConfirm = (is_result: boolean) => {
           追加してほしいゲーム情報を入力してください
         </h3>
         <button class="hover:bg-gray-300 p-1 rounded-md" @click="emit('close')">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-              clip-rule="evenodd"
-            />
-          </svg>
+          <XIcon class="w-5 h-5" />
         </button>
       </div>
       <!-- modal body -->

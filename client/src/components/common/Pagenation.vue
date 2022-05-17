@@ -81,7 +81,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="flex mt-10" v-if="totalPages">
+  <div v-if="totalPages" class="flex mt-10">
     <!-- 一番初めに戻る -->
     <a
       href="#"
