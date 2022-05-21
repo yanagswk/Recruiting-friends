@@ -25,3 +25,5 @@ Route::get('/game', [GameController::class, 'getGame']);
 Route::post('/recruitment', [GameController::class, 'recruitment']);
 
 Route::post('/request_add_game_mail', [GameController::class, 'requestAddGameMail']);
+
+Route::post('/inquiry_mail', [GameController::class, 'inquiryMail']);

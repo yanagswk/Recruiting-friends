@@ -269,9 +269,41 @@ class GameController extends Controller
             }
         }
         $contact = [
-            'game_name'  => $game_name,
-            'hardware_name'  => ($hardware) ? implode("・", $hardware->toArray()) : "指定なし",
-            'user_message'   => $user_message ?? ""
+            'game_name'     => $game_name,
+            'hardware_name' => ($hardware) ? implode("・", $hardware->toArray()) : "指定なし",
+            'user_message'  => $user_message ?? "",
+            'view'          => 'emails.contact',
+            'subject'       => '追加してほしいゲームのお問い合わせ'
+        ];
+
+        Mail::to("yanagimassu@gmail.com")->send(new ContactMail($contact));
+
+        return Common::makeResponse([
+            'state'  => 'success'
+        ]);
+    }
+
+    /**
+     * お問い合わせのメール送信
+     */
+    public function inquiryMail(Request $request)
+    {
+        $title = $request->input('title');
+        $content = $request->input('content');
+
+        $validation = Validator::make($request->all(), [
+            'title'     => 'required|string',
+            'content'   => 'required|string',
+        ]);
+        if ($validation->fails()) {
+            return Common::makeValidationErrorResponse($validation->errors());
+        }
+
+        $contact = [
+            'title'         => $title,
+            'content'       => $content,
+            'view'          => 'emails.inquiry',
+            'subject'       => 'お問い合わせ'
         ];
 
         Mail::to("yanagimassu@gmail.com")->send(new ContactMail($contact));

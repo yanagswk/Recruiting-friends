@@ -18,9 +18,13 @@ class ContactMail extends Mailable
      */
     public function __construct(array $contact)
     {
-        $this->game_name = $contact["game_name"];
-        $this->hardware_name = $contact["hardware_name"];
-        $this->user_message = $contact["user_message"];
+        $this->game_name = $contact["game_name"] ?? "";
+        $this->hardware_name = $contact["hardware_name"] ?? "";
+        $this->user_message = $contact["user_message"] ?? "";
+        $this->title = $contact["title"] ?? "";
+        $this->content = $contact["content"] ?? "";
+        $this->view = $contact["view"];
+        $this->subject = $contact["subject"];
     }
 
     /**
@@ -31,12 +35,14 @@ class ContactMail extends Mailable
     public function build()
     {
         return $this->from("yanagimassu@gmail.com")
-            ->subject("追加してほしいゲームのお問い合わせ")
-            ->view('emails.contact')
+            ->subject($this->subject)
+            ->view($this->view)
             ->with([
-                'game_name' => $this->game_name,
+                'game_name'     => $this->game_name,
                 'hardware_name' => $this->hardware_name,
-                'user_message' => $this->user_message,
+                'user_message'  => $this->user_message,
+                'title'         => $this->title,
+                'content'       => $this->content,
             ]);
     }
 }

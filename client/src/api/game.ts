@@ -66,3 +66,12 @@ export const postRequestAddGameMail = (
     user_message: user_message,
   });
 };
+/**
+ * お問い合わせ内容送信
+ */
+export const postRequestInquiryMail = (title: string, content: string) => {
+  return axios.post("api/inquiry_mail", {
+    title: title,
+    content: content,
+  });
+};
