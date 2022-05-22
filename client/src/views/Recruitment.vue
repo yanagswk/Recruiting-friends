@@ -126,7 +126,7 @@ const apiGetGame = async (hardware_id?: number) => {
   state.recruitment_list = apiGame.recruitment_list;
   state.friend_id_list = apiGame.friend_id_list;
 
-  console.log(state.recruitment_list);
+  document.title = `${state.game_name}用 募集掲示板`;
 
   // if (state.recruitment_list.length) {
   //    = state.recruitment_list[0]['hardware_id']

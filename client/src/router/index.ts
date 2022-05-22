@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/recruitment/:id",
     name: "Recruitment",
     component: Recruitment,
-    meta: { title: "詳細画面" },
+    // meta: { title: "詳細画面" },
   },
   {
     // 指定したパスが存在しない場合は、NotFound
@@ -31,9 +31,7 @@ const router = createRouter({
 });
 
 const DEFAULT_TITLE = "ゆるボ！";
-
 router.afterEach((to, from) => {
-  // TODO: ゲームごとに詳細画面のtitleタグ変える
   const title = to.meta.title as string;
   document.title = title || DEFAULT_TITLE;
 });
