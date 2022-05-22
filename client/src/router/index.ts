@@ -9,22 +9,33 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "DashBoard",
     component: DashBoard,
+    meta: { title: "ゆるボ！" },
   },
   {
     path: "/recruitment/:id",
     name: "Recruitment",
     component: Recruitment,
+    meta: { title: "詳細画面" },
   },
   {
     // 指定したパスが存在しない場合は、NotFound
     path: "/:catchAll(.*)",
     component: NotFound,
+    meta: { title: "404" },
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+const DEFAULT_TITLE = "ゆるボ！";
+
+router.afterEach((to, from) => {
+  // TODO: ゲームごとに詳細画面のtitleタグ変える
+  const title = to.meta.title as string;
+  document.title = title || DEFAULT_TITLE;
 });
 
 // GSAPで遷移時にアニメーション

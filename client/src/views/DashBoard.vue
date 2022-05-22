@@ -53,7 +53,7 @@ apiGetGameList();
         @close="closeModal"
       />
     </transition>
-    <Search />
+    <!-- <Search /> -->
   </div>
   <GameList :game-list="gameList" />
 </template>

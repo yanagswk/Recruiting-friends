@@ -113,7 +113,7 @@ defineProps<{
         </div>
 
         <p
-          class="text-gray-600 text-sm md:text-base mb-3 md:mb-4 p-1 bg-slate-200 break-words"
+          class="text-gray-600 text-sm md:text-base mb-3 md:mb-4 p-1 bg-slate-200 whitespace-pre-wrap"
         >
           {{ recruitment.comment }}
         </p>
